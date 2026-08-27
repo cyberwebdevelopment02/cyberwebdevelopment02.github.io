@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Démarrer un projet — Cyber Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E2136;
+    --ink-2:#132C46;
+    --atlantic:#1C4870;
+    --whitewash:#F6F4EE;
+    --whitewash-2:#EEEAE0;
+    --brass:#B8863C;
+    --brass-light:#D9AE6B;
+    --slate:#2B2F36;
+    --mist:#C7D2DA;
+    --line: rgba(246,244,238,0.14);
+    --line-dark: rgba(14,33,54,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Work Sans', sans-serif;
+    color:var(--slate);
+    background:var(--whitewash);
+    line-height:1.55;
+  }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:900px; margin:0 auto; padding:0 28px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,33,54,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .navwrap{ max-width:1120px; margin:0 auto; padding:0 28px; display:flex; align-items:center; justify-content:space-between; height:68px; }
+  .logo{ font-family:'Fraunces', serif; font-size:1.15rem; color:var(--whitewash); font-weight:600; }
+  .logo span{ color:var(--brass-light); }
+  .back-link{ color:var(--mist); font-size:0.9rem; transition:color .2s; }
+  .back-link:hover{ color:var(--whitewash); }
+
+  /* HERO */
+  .intro{
+    background:var(--ink); color:var(--whitewash); padding:64px 0 56px;
+  }
+  .intro h1{ font-size:clamp(1.8rem,3.4vw,2.6rem); margin:14px 0 16px; }
+  .intro p{ color:var(--mist); max-width:60ch; font-size:1.02rem; }
+
+  /* FORM */
+  .formsection{ padding:56px 0 96px; }
+  form{ display:flex; flex-direction:column; gap:44px; }
+
+  fieldset{ border:none; padding:0; }
+  legend{ padding:0; margin-bottom:6px; }
+  legend .eyebrow{ display:block; margin-bottom:6px; }
+  legend h2{ font-size:1.3rem; color:var(--ink); }
+  .fieldset-note{ color:#5a5f66; font-size:0.9rem; margin-top:6px; margin-bottom:20px; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .field{ display:flex; flex-direction:column; gap:6px; margin-top:18px; }
+  .field:first-child{ margin-top:0; }
+  .grid2 .field{ margin-top:0; }
+  label{ font-size:0.88rem; font-weight:600; color:var(--ink); }
+  label .opt{ font-weight:400; color:#8a8f96; font-size:0.82rem; }
+  input, select, textarea{
+    font-family:'Work Sans', sans-serif;
+    font-size:0.96rem;
+    padding:12px 14px;
+    border:1px solid #D9D4C6;
+    border-radius:4px;
+    background:#fff;
+    color:var(--slate);
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:none; border-color:var(--brass);
+  }
+  textarea{ resize:vertical; min-height:80px; }
+
+  .radiogroup{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+  .radiopill{
+    position:relative;
+  }
+  .radiopill input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
+  .radiopill span{
+    display:inline-block; padding:10px 16px; border:1px solid #D9D4C6; border-radius:20px;
+    font-size:0.88rem; color:var(--slate); transition:all .15s;
+  }
+  .radiopill input:checked + span{
+    background:var(--ink); color:var(--whitewash); border-color:var(--ink);
+  }
+
+  .servicecard{
+    border:1px solid #D9D4C6; border-radius:6px; padding:18px; margin-top:14px;
+  }
+  .servicecard .grid2{ margin-top:0; }
+  .servicecard-title{ font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--brass); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; display:block; }
+
+  .submitbar{
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding-top:8px; border-top:1px solid #E2DECF;
+    margin-top:10px; padding-top:32px;
+  }
+  .btn{
+    display:inline-block; padding:14px 30px; border-radius:3px; font-weight:600; font-size:0.96rem;
+    border:none; cursor:pointer; transition:transform .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--brass); color:var(--ink); }
+  .submit-note{ color:#6b7076; font-size:0.86rem; }
+
+  .confirm{
+    display:none; margin-top:26px; padding:20px 22px; border-radius:6px;
+    background:var(--whitewash-2); border:1px solid var(--brass-light); color:var(--ink); font-size:0.92rem;
+  }
+  .confirm.show{ display:block; }
+
+  footer{ background:var(--ink); border-top:1px solid var(--line); padding:28px 0; }
+  footer .wrap{ display:flex; justify-content:space-between; color:var(--mist); font-size:0.82rem; flex-wrap:wrap; gap:8px; max-width:1120px; }
+
+  @media (max-width:640px){
+    .grid2{ grid-template-columns:1fr; }
+    .submitbar{ flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="navwrap">
+    <div class="logo">Cyber<span>Web</span> Development</div>
+    <a href="index.html" class="back-link">← Retour au site</a>
+  </div>
+</nav>
+
+<header class="intro">
+  <div class="wrap">
+    <span class="eyebrow">Démarrer un projet</span>
+    <h1>Parlons de votre site.</h1>
+    <p>Remplissez ce formulaire avec vos informations et celles de votre commerce. Il nous sert à préparer votre fiche client (index.info) et à lancer votre projet — rien n'est facturé avant qu'on ait échangé et validé un prix fixe ensemble.</p>
+  </div>
+</header>
+
+<section class="formsection">
+  <div class="wrap">
+    <form id="project-form">
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">01 — Vos coordonnées</span>
+          <h2>Qui êtes-vous</h2>
+        </legend>
+        <div class="grid2">
+          <div class="field">
+            <label for="client_name">Nom du client</label>
+            <input type="text" id="client_name" name="client_name" required>
+          </div>
+          <div class="field">
+            <label for="client_email">Email du client</label>
+            <input type="email" id="client_email" name="client_email" required>
+          </div>
+        </div>
+        <div class="field" style="margin-top:18px;">
+          <label>Mode de paiement souhaité</label>
+          <div class="radiogroup">
+            <label class="radiopill"><input type="radio" name="payment_method" value="Virement bancaire" required><span>Virement bancaire</span></label>
+            <label class="radiopill"><input type="radio" name="payment_method" value="Espèces"><span>Espèces</span></label>
+            <label class="radiopill"><input type="radio" name="payment_method" value="Paiement mobile"><span>Paiement mobile</span></label>
+            <label class="radiopill"><input type="radio" name="payment_method" value="À discuter"><span>À discuter</span></label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">02 — Package</span>
+          <h2>Formule</h2>
+        </legend>
+        <div class="grid2">
+          <div class="field">
+            <label for="package_tier">Formule souhaitée</label>
+            <select id="package_tier" name="package_tier" required>
+              <option value="">— Choisir —</option>
+              <option value="Starter">Starter (1 500–2 500 MAD)</option>
+              <option value="Standard">Standard (3 000–5 500 MAD)</option>
+              <option value="Premium">Premium (6 000–12 000 MAD)</option>
+              <option value="Je ne sais pas encore">Je ne sais pas encore</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="languages_needed">Langue(s) du site</label>
+            <input type="text" id="languages_needed" name="languages_needed" placeholder="ex. Français seul, Français + Arabe">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">03 — Votre commerce</span>
+          <h2>Informations de base</h2>
+        </legend>
+        <div class="grid2">
+          <div class="field">
+            <label for="business_name">Nom du commerce</label>
+            <input type="text" id="business_name" name="business_name" required>
+          </div>
+          <div class="field">
+            <label for="city">Ville</label>
+            <input type="text" id="city" name="city" required>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:14px;">
+          <div class="field">
+            <label for="category">Catégorie <span class="opt">(café, salon, clinique...)</span></label>
+            <input type="text" id="category" name="category" required>
+          </div>
+          <div class="field">
+            <label for="year_founded">Année de création <span class="opt">(optionnel)</span></label>
+            <input type="text" id="year_founded" name="year_founded" placeholder="N/A si non pertinent">
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="differentiator">Ce qui vous différencie de la concurrence</label>
+          <textarea id="differentiator" name="differentiator" placeholder="La seule chose qui donne vraiment envie de vous choisir"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">04 — Contact affiché sur le site</span>
+          <h2>Coordonnées du commerce</h2>
+        </legend>
+        <div class="grid2">
+          <div class="field">
+            <label for="business_phone">Téléphone</label>
+            <input type="tel" id="business_phone" name="business_phone" required>
+          </div>
+          <div class="field">
+            <label for="business_whatsapp">WhatsApp <span class="opt">("identique au téléphone" possible)</span></label>
+            <input type="text" id="business_whatsapp" name="business_whatsapp">
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:14px;">
+          <div class="field">
+            <label for="business_email">Email</label>
+            <input type="email" id="business_email" name="business_email" required>
+          </div>
+          <div class="field">
+            <label for="address">Adresse</label>
+            <input type="text" id="address" name="address" required>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="hours">Horaires d'ouverture</label>
+          <input type="text" id="hours" name="hours" placeholder="ex. Lun-Sam 9h-19h, Dim fermé">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">05 — À propos</span>
+          <h2>Votre histoire</h2>
+        </legend>
+        <div class="field">
+          <label for="about_notes">Quelques notes <span class="opt">(historique, valeurs — une ligne suffit pour Starter)</span></label>
+          <textarea id="about_notes" name="about_notes"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">06 — Services</span>
+          <h2>Vos offres <span class="opt" style="font-size:1rem;">(2 à 4)</span></h2>
+        </legend>
+        <div class="servicecard">
+          <span class="servicecard-title">Service 1</span>
+          <div class="grid2">
+            <div class="field"><label for="service_1_name">Nom</label><input type="text" id="service_1_name" name="service_1_name" required></div>
+            <div class="field"><label for="service_1_notes">Notes</label><input type="text" id="service_1_notes" name="service_1_notes"></div>
+          </div>
+        </div>
+        <div class="servicecard">
+          <span class="servicecard-title">Service 2</span>
+          <div class="grid2">
+            <div class="field"><label for="service_2_name">Nom</label><input type="text" id="service_2_name" name="service_2_name" required></div>
+            <div class="field"><label for="service_2_notes">Notes</label><input type="text" id="service_2_notes" name="service_2_notes"></div>
+          </div>
+        </div>
+        <div class="servicecard">
+          <span class="servicecard-title">Service 3 <span class="opt">(Standard/Premium)</span></span>
+          <div class="grid2">
+            <div class="field"><label for="service_3_name">Nom</label><input type="text" id="service_3_name" name="service_3_name"></div>
+            <div class="field"><label for="service_3_notes">Notes</label><input type="text" id="service_3_notes" name="service_3_notes"></div>
+          </div>
+        </div>
+        <div class="servicecard">
+          <span class="servicecard-title">Service 4 <span class="opt">(Standard/Premium)</span></span>
+          <div class="grid2">
+            <div class="field"><label for="service_4_name">Nom</label><input type="text" id="service_4_name" name="service_4_name"></div>
+            <div class="field"><label for="service_4_notes">Notes</label><input type="text" id="service_4_notes" name="service_4_notes"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">07 — Galerie <span class="opt" style="font-size:1rem;">(Standard/Premium)</span></span>
+        </legend>
+        <div class="field">
+          <label>Avez-vous des photos ?</label>
+          <div class="radiogroup">
+            <label class="radiopill"><input type="radio" name="photos_available" value="Oui"><span>Oui</span></label>
+            <label class="radiopill"><input type="radio" name="photos_available" value="Non"><span>Non, pas encore</span></label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="gallery_notes">Description rapide des photos <span class="opt">(si disponibles)</span></label>
+          <textarea id="gallery_notes" name="gallery_notes"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">08 — Témoignages <span class="opt" style="font-size:1rem;">(optionnel — laissez vide si aucun)</span></span>
+        </legend>
+        <div class="grid2">
+          <div class="field"><label for="testimonial_1_quote">Témoignage 1</label><textarea id="testimonial_1_quote" name="testimonial_1_quote"></textarea></div>
+          <div class="field"><label for="testimonial_1_name">Nom du client</label><input type="text" id="testimonial_1_name" name="testimonial_1_name"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">09 — Marque <span class="opt" style="font-size:1rem;">(optionnel)</span></span>
+        </legend>
+        <div class="grid2">
+          <div class="field">
+            <label for="brand_colors">Couleurs de marque</label>
+            <input type="text" id="brand_colors" name="brand_colors" placeholder="Codes hex, ou 'pas sûr'">
+          </div>
+          <div class="field">
+            <label for="brand_tone">Ton de la marque</label>
+            <input type="text" id="brand_tone" name="brand_tone" placeholder="ex. chaleureux, moderne, direct">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>
+          <span class="eyebrow">10 — Autres notes</span>
+        </legend>
+        <div class="field">
+          <textarea id="anything_else" name="anything_else" placeholder="Demandes particulières, éléments à éviter, contexte concurrentiel..."></textarea>
+        </div>
+      </fieldset>
+
+      <div class="submitbar">
+        <button type="submit" class="btn btn-primary">Envoyer ma demande</button>
+        <span class="submit-note">Ouvre votre application email avec toutes vos réponses déjà préparées — il ne reste qu'à confirmer l'envoi.</span>
+      </div>
+
+      <div class="confirm" id="confirm-box">
+        Votre client email va s'ouvrir avec un message pré-rempli à destination de <strong>cyberweb.development02@gmail.com</strong>. Si rien ne s'ouvre automatiquement, vérifiez qu'une application email est configurée sur cet appareil, ou écrivez-nous directement à cette adresse.
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Cyber Web Development — Tanger, Maroc</span>
+    <span>cyberweb.development02@gmail.com · +212 6 48 13 22 01</span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('project-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const f = e.target;
+    const v = (name) => (f.elements[name] && f.elements[name].value ? f.elements[name].value.trim() : '');
+    const payment = f.querySelector('input[name="payment_method"]:checked');
+    const photos = f.querySelector('input[name="photos_available"]:checked');
+
+    const lines = [
+      `Nouvelle demande de projet — ${v('business_name') || 'Client sans nom'}`,
+      '',
+      '== CLIENT ==',
+      `Nom du client: ${v('client_name')}`,
+      `Email du client: ${v('client_email')}`,
+      `Mode de paiement souhaité: ${payment ? payment.value : ''}`,
+      '',
+      '== index.info ==',
+      `package_tier: ${v('package_tier')}`,
+      `languages_needed: ${v('languages_needed')}`,
+      '',
+      `business_name: ${v('business_name')}`,
+      `city: ${v('city')}`,
+      `category: ${v('category')}`,
+      `year_founded: ${v('year_founded')}`,
+      `differentiator: ${v('differentiator')}`,
+      '',
+      `phone: ${v('business_phone')}`,
+      `whatsapp: ${v('business_whatsapp')}`,
+      `email: ${v('business_email')}`,
+      `address: ${v('address')}`,
+      `hours: ${v('hours')}`,
+      '',
+      `about_notes: ${v('about_notes')}`,
+      '',
+      `service_1_name: ${v('service_1_name')}`,
+      `service_1_notes: ${v('service_1_notes')}`,
+      `service_2_name: ${v('service_2_name')}`,
+      `service_2_notes: ${v('service_2_notes')}`,
+      `service_3_name: ${v('service_3_name')}`,
+      `service_3_notes: ${v('service_3_notes')}`,
+      `service_4_name: ${v('service_4_name')}`,
+      `service_4_notes: ${v('service_4_notes')}`,
+      '',
+      `photos_available: ${photos ? photos.value : ''}`,
+      `gallery_notes: ${v('gallery_notes')}`,
+      '',
+      `testimonial_1_quote: ${v('testimonial_1_quote')}`,
+      `testimonial_1_name: ${v('testimonial_1_name')}`,
+      '',
+      `brand_colors: ${v('brand_colors')}`,
+      `brand_tone: ${v('brand_tone')}`,
+      '',
+      `anything_else: ${v('anything_else')}`
+    ];
+
+    const subject = encodeURIComponent(`Nouveau projet — ${v('business_name') || v('client_name') || 'Sans nom'}`);
+    const body = encodeURIComponent(lines.join('\n'));
+    window.location.href = `mailto:cyberweb.development02@gmail.com?subject=${subject}&body=${body}`;
+
+    document.getElementById('confirm-box').classList.add('show');
+  });
+</script>
+
+</body>
+</html>
