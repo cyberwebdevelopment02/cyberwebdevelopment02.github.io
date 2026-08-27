@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Web Development — Sites web pour commerces locaux à Tanger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E2136;
+    --ink-2:#132C46;
+    --atlantic:#1C4870;
+    --whitewash:#F6F4EE;
+    --whitewash-2:#EEEAE0;
+    --brass:#B8863C;
+    --brass-light:#D9AE6B;
+    --slate:#2B2F36;
+    --mist:#C7D2DA;
+    --line: rgba(246,244,238,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Work Sans', sans-serif;
+    color:var(--slate);
+    background:var(--whitewash);
+    line-height:1.55;
+  }
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+  a{ color:inherit; text-decoration:none; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 28px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,33,54,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:68px; }
+  .logo{ font-family:'Fraunces', serif; font-size:1.15rem; color:var(--whitewash); font-weight:600; }
+  .logo span{ color:var(--brass-light); }
+  .navlinks{ display:flex; gap:32px; }
+  .navlinks a{ color:var(--mist); font-size:0.92rem; transition:color .2s; }
+  .navlinks a:hover{ color:var(--whitewash); }
+  .nav-cta{
+    background:var(--brass); color:var(--ink); padding:9px 18px; border-radius:3px;
+    font-size:0.88rem; font-weight:600;
+  }
+
+  /* HERO */
+  .hero{
+    background:var(--ink);
+    color:var(--whitewash);
+    padding:88px 0 96px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; }
+  .hero h1{ font-size:clamp(2.1rem, 4vw, 3.4rem); line-height:1.08; margin:18px 0 22px; }
+  .hero h1 em{ font-style:italic; color:var(--brass-light); }
+  .hero p{ color:var(--mist); font-size:1.05rem; max-width:46ch; margin-bottom:32px; }
+  .btn-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:13px 26px; border-radius:3px; font-weight:600; font-size:0.94rem;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--brass); color:var(--ink); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--whitewash); }
+  .btn-ghost:hover{ border-color:var(--brass-light); }
+
+  /* Route map signature element */
+  .routemap{ width:100%; height:auto; }
+  .route-path{
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:draw 2.6s ease forwards 0.3s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .node{ opacity:0; animation:pop .5s ease forwards; }
+  .node.n1{ animation-delay:0.5s; }
+  .node.n2{ animation-delay:1.1s; }
+  .node.n3{ animation-delay:1.7s; }
+  .node.n4{ animation-delay:2.3s; }
+  @keyframes pop{ from{ opacity:0; transform:scale(0.4); } to{ opacity:1; transform:scale(1); } }
+  @media (prefers-reduced-motion: reduce){
+    .route-path{ animation:none; stroke-dashoffset:0; }
+    .node{ animation:none; opacity:1; }
+  }
+
+  /* SECTION SHARED */
+  section{ padding:88px 0; }
+  .section-head{ max-width:640px; margin-bottom:52px; }
+  .section-head h2{ font-size:clamp(1.7rem,2.6vw,2.4rem); margin-top:12px; }
+  .section-head p{ color:#5a5f66; margin-top:14px; font-size:1.02rem; }
+
+  /* SERVICES */
+  .services{ background:var(--whitewash); }
+  .cards3{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .card{
+    background:#fff; border:1px solid var(--whitewash-2); border-radius:6px;
+    padding:32px 26px; transition:border-color .2s, transform .2s;
+  }
+  .card:hover{ border-color:var(--brass); transform:translateY(-3px); }
+  .card .num{ font-family:'IBM Plex Mono',monospace; color:var(--brass); font-size:0.82rem; }
+  .card h3{ font-size:1.25rem; margin:14px 0 10px; color:var(--ink); }
+  .card p{ color:#565b62; font-size:0.95rem; }
+
+  /* PROCESS */
+  .process{ background:var(--whitewash-2); }
+  .steps{ display:grid; grid-template-columns:repeat(5,1fr); gap:18px; margin-top:8px; }
+  .step{ position:relative; padding-top:18px; }
+  .step .stepnum{
+    font-family:'Fraunces',serif; font-size:2rem; color:var(--brass); opacity:0.55; display:block; margin-bottom:6px;
+  }
+  .step h4{ font-size:1rem; color:var(--ink); margin-bottom:6px; font-weight:600; }
+  .step p{ font-size:0.86rem; color:#5c6167; }
+
+  /* PRICING */
+  .pricing{ background:var(--ink); color:var(--whitewash); }
+  .pricing .section-head p{ color:var(--mist); }
+  .pricing .eyebrow{ color:var(--brass-light); }
+  .pcards{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .pcard{
+    background:var(--ink-2); border:1px solid var(--line); border-radius:6px; padding:30px 26px;
+    display:flex; flex-direction:column;
+  }
+  .pcard.featured{ border-color:var(--brass); position:relative; }
+  .pcard.featured::before{
+    content:"POPULAIRE"; position:absolute; top:-11px; right:22px;
+    background:var(--brass); color:var(--ink); font-family:'IBM Plex Mono',monospace;
+    font-size:0.65rem; letter-spacing:0.08em; padding:4px 9px; border-radius:2px;
+  }
+  .pcard h3{ font-size:1.15rem; margin-bottom:6px; }
+  .price{ font-family:'Fraunces',serif; font-size:2rem; margin:10px 0 4px; color:var(--brass-light); }
+  .price span{ font-family:'Work Sans',sans-serif; font-size:0.85rem; color:var(--mist); font-weight:400; }
+  .pcard ul{ list-style:none; margin:20px 0 26px; flex-grow:1; }
+  .pcard li{ font-size:0.88rem; color:var(--mist); padding:6px 0; border-top:1px solid var(--line); }
+  .pcard li:first-child{ border-top:none; }
+  .pcard .btn{ text-align:center; }
+
+  /* TRUST */
+  .trust{ background:var(--whitewash); }
+  .trustgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:30px; }
+  .trustitem .eyebrow{ margin-bottom:8px; }
+  .trustitem h4{ font-family:'Fraunces',serif; font-weight:500; font-size:1.1rem; color:var(--ink); margin-bottom:8px; }
+  .trustitem p{ font-size:0.92rem; color:#5c6167; }
+
+  /* CONTACT */
+  .contact{ background:var(--whitewash-2); }
+  .contact-box{
+    background:var(--ink); color:var(--whitewash); border-radius:8px; padding:52px 48px;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
+  }
+  .contact-box h2{ font-size:clamp(1.5rem,2.4vw,2rem); margin-bottom:14px; }
+  .contact-box p{ color:var(--mist); margin-bottom:26px; max-width:44ch; }
+  .contact-links{ display:flex; flex-direction:column; gap:14px; }
+  .contact-links a{
+    border:1px solid var(--line); border-radius:4px; padding:14px 18px; font-size:0.94rem;
+    display:flex; justify-content:space-between; align-items:center; transition:border-color .2s;
+  }
+  .contact-links a:hover{ border-color:var(--brass-light); }
+  .contact-links .tag{ font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--brass-light); }
+
+  footer{ background:var(--ink); border-top:1px solid var(--line); padding:28px 0; }
+  footer .wrap{ display:flex; justify-content:space-between; color:var(--mist); font-size:0.82rem; }
+
+  @media (max-width:860px){
+    .hero .wrap{ grid-template-columns:1fr; }
+    .cards3, .pcards, .trustgrid{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:repeat(2,1fr); }
+    .contact-box{ grid-template-columns:1fr; padding:36px 26px; }
+    .navlinks{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Cyber<span>Web</span> Development</div>
+    <div class="navlinks">
+      <a href="#services">Services</a>
+      <a href="#process">Méthode</a>
+      <a href="#pricing">Tarifs</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-cta">Démarrer un projet</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Développement web · Tanger</span>
+      <h1>On connecte les commerces de <em>Tanger</em> à internet.</h1>
+      <p>Cyber Web Development conçoit des sites simples, rapides et professionnels pour les commerces locaux — cafés, salons, cliniques, boutiques — pour qu'ils soient enfin trouvables sur Google.</p>
+      <div class="btn-row">
+        <a href="#pricing" class="btn btn-primary">Voir les tarifs</a>
+        <a href="#contact" class="btn btn-ghost">Discuter de votre projet</a>
+      </div>
+    </div>
+    <div>
+      <svg class="routemap" viewBox="0 0 480 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="route-path" d="M60 90 C 140 60, 180 140, 250 130 C 320 120, 330 200, 410 190 C 440 186, 420 260, 380 270" stroke="#D9AE6B" stroke-width="1.6" stroke-linecap="round"/>
+        <circle class="node n1" cx="60" cy="90" r="7" fill="#B8863C"/>
+        <text x="76" y="85" fill="#F6F4EE" font-family="IBM Plex Mono" font-size="12">Tanger — vous</text>
+        <circle class="node n2" cx="250" cy="130" r="5" fill="#F6F4EE"/>
+        <text x="262" y="126" fill="#C7D2DA" font-family="IBM Plex Mono" font-size="11">Café Marina</text>
+        <circle class="node n3" cx="410" cy="190" r="5" fill="#F6F4EE"/>
+        <text x="330" y="212" fill="#C7D2DA" font-family="IBM Plex Mono" font-size="11">Salon Amina</text>
+        <circle class="node n4" cx="380" cy="270" r="5" fill="#F6F4EE"/>
+        <text x="322" y="292" fill="#C7D2DA" font-family="IBM Plex Mono" font-size="11">Clinique Nour</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Ce qu'on fait</span>
+      <h2>Trois façons de vous mettre en ligne</h2>
+      <p>Que vous n'ayez encore aucun site, ou que le vôtre date de dix ans, on a un forfait adapté.</p>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>Création de site</h3>
+        <p>Un site neuf, pensé pour vos clients : rapide, lisible sur mobile, avec bouton WhatsApp et localisation Google Maps.</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>Refonte & vitesse</h3>
+        <p>Votre site existant modernisé — design actuel, temps de chargement réduit, meilleur référencement sur Google.</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>Suivi & maintenance</h3>
+        <p>Hébergement, nom de domaine, mises à jour de contenu et sécurité gérés pour vous, chaque mois.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">La méthode</span>
+      <h2>De la première discussion à la mise en ligne</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="stepnum">01</span><h4>Découverte</h4><p>15 min pour comprendre votre activité et vos clients.</p></div>
+      <div class="step"><span class="stepnum">02</span><h4>Proposition</h4><p>Un forfait clair, un prix fixe, aucune surprise.</p></div>
+      <div class="step"><span class="stepnum">03</span><h4>Conception</h4><p>Design et contenu, validés avec vous à chaque étape.</p></div>
+      <div class="step"><span class="stepnum">04</span><h4>Mise en ligne</h4><p>Domaine, hébergement, site publié et testé.</p></div>
+      <div class="step"><span class="stepnum">05</span><h4>Suivi</h4><p>Support et mises à jour selon votre forfait.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Tarifs</span>
+      <h2>Des forfaits simples, en dirhams</h2>
+      <p>Prix fixes annoncés à l'avance. Un acompte de 30 à 50% au démarrage, le solde à la livraison.</p>
+    </div>
+    <div class="pcards">
+      <div class="pcard">
+        <h3>Starter</h3>
+        <div class="price">1 500 – 2 500 <span>MAD</span></div>
+        <ul>
+          <li>Site une page</li>
+          <li>Adapté mobile</li>
+          <li>Bouton WhatsApp</li>
+          <li>1 série de révisions</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Choisir Starter</a>
+      </div>
+      <div class="pcard featured">
+        <h3>Standard</h3>
+        <div class="price">3 000 – 5 500 <span>MAD</span></div>
+        <ul>
+          <li>4 à 6 pages</li>
+          <li>Formulaire de contact</li>
+          <li>Galerie photo + Google Maps</li>
+          <li>Fiche Google Business incluse</li>
+          <li>2 séries de révisions</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Choisir Standard</a>
+      </div>
+      <div class="pcard">
+        <h3>Premium</h3>
+        <div class="price">6 000 – 12 000 <span>MAD</span></div>
+        <ul>
+          <li>Site complet sur-mesure</li>
+          <li>Réservation / prise de rendez-vous</li>
+          <li>Multilingue AR / FR / EN</li>
+          <li>Analytique intégrée</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Choisir Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Pourquoi Cyber Web Development</span>
+      <h2>Fait pour les commerces locaux, pas pour les multinationales</h2>
+    </div>
+    <div class="trustgrid">
+      <div class="trustitem">
+        <span class="eyebrow">Local</span>
+        <h4>On connaît Tanger</h4>
+        <p>Basés sur place, on comprend vos clients et votre marché — pas une agence lointaine qui ne connaît pas le terrain.</p>
+      </div>
+      <div class="trustitem">
+        <span class="eyebrow">Transparent</span>
+        <h4>Prix fixes, pas de jargon</h4>
+        <p>Un forfait annoncé à l'avance, une facture conforme, aucune surprise en cours de route.</p>
+      </div>
+      <div class="trustitem">
+        <span class="eyebrow">Rapide</span>
+        <h4>Livraison en jours, pas en mois</h4>
+        <p>Un site simple et efficace, en ligne rapidement — pas un chantier qui traîne six mois.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-box">
+      <div>
+        <span class="eyebrow" style="color:var(--brass-light)">Prêt à démarrer</span>
+        <h2>Parlons de votre site</h2>
+        <p>Envoyez un message et recevez une proposition avec prix fixe sous 24h.</p>
+      </div>
+      <div class="contact-links">
+        <a href="https://wa.me/212600000000" target="_blank">WhatsApp <span class="tag">RÉPONSE RAPIDE</span></a>
+        <a href="mailto:contact@cyberwebdev.ma">contact@cyberwebdev.ma <span class="tag">EMAIL</span></a>
+        <a href="tel:+212600000000">+212 6 00 00 00 00 <span class="tag">APPEL</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Cyber Web Development — Tanger, Maroc</span>
+    <span>Auto-entrepreneur · ICE en cours d'attribution</span>
+  </div>
+</footer>
+
+</body>
+</html>
