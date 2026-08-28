@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Cyber Web Development</title>
+<style>
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Work Sans', sans-serif;
+    background:#fff;
+    color:#0E2136;
+    min-height:100vh;
+  }
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; border-bottom:1px solid #eee; font-size:0.85rem;
+  }
+  header a{ color:#5a5f66; text-decoration:none; }
+  header a:hover{ color:#0E2136; }
+  main{
+    padding:60px 28px;
+    color:#9aa0a6;
+    font-size:0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span>Cyber Web Development — Admin</span>
+  <a href="#" id="logout-link">Déconnexion</a>
+</header>
+
+<main>
+  <p>Page admin — contenu à venir.</p>
+</main>
+
+<script src="auth.js"></script>
+<script>
+  (function () {
+    const email = cwdGetLoggedInEmail();
+
+    if (!email) {
+      window.location.href = 'login.html?redirect=admin.html';
+      return;
+    }
+    if (!cwdIsAdmin()) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    document.getElementById('logout-link').addEventListener('click', function (e) {
+      e.preventDefault();
+      cwdLogout();
+      window.location.href = 'index.html';
+    });
+  })();
+</script>
+
+</body>
+</html>
