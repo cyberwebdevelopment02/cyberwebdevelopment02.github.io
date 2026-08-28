@@ -51,6 +51,11 @@
   .navlinks{ display:flex; gap:32px; }
   .navlinks a{ color:var(--mist); font-size:0.92rem; transition:color .2s; }
   .navlinks a:hover{ color:var(--whitewash); }
+  .nav-right{ display:flex; align-items:center; gap:20px; }
+  .nav-auth{ display:flex; align-items:center; gap:14px; font-size:0.85rem; }
+  .nav-auth a{ color:var(--mist); transition:color .2s; }
+  .nav-auth a:hover{ color:var(--whitewash); }
+  .nav-auth .auth-admin-link{ color:var(--brass-light); font-weight:600; }
   .nav-cta{
     background:var(--brass); color:var(--ink); padding:9px 18px; border-radius:3px;
     font-size:0.88rem; font-weight:600;
@@ -194,7 +199,10 @@
       <a href="#pricing">Tarifs</a>
       <a href="#contact">Contact</a>
     </div>
-    <a href="demarrer.html" class="nav-cta">Démarrer un projet</a>
+    <div class="nav-right">
+      <span class="nav-auth" id="auth-slot"></span>
+      <a href="demarrer.html" class="nav-cta">Démarrer un projet</a>
+    </div>
   </div>
 </nav>
 
@@ -363,5 +371,9 @@
   </div>
 </footer>
 
+<script src="auth.js"></script>
+<script>
+  cwdRenderAuthSlot();
+</script>
 </body>
 </html>
