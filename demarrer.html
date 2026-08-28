@@ -51,6 +51,10 @@
   .logo span{ color:var(--brass-light); }
   .back-link{ color:var(--mist); font-size:0.9rem; transition:color .2s; }
   .back-link:hover{ color:var(--whitewash); }
+  .nav-auth{ display:flex; align-items:center; gap:14px; }
+  .nav-auth a{ color:var(--mist); transition:color .2s; }
+  .nav-auth a:hover{ color:var(--whitewash); }
+  .nav-auth .auth-admin-link{ color:var(--brass-light); font-weight:600; }
 
   /* HERO */
   .intro{
@@ -126,6 +130,18 @@
   }
   .confirm.show{ display:block; }
 
+  .loginwall{
+    display:none; padding:44px 40px; border-radius:8px; background:#fff;
+    border:1px solid #D9D4C6; max-width:520px;
+  }
+  .loginwall.show{ display:block; }
+  .loginwall h2{ font-size:1.4rem; color:var(--ink); margin:10px 0 10px; }
+  .loginwall p{ color:#5a5f66; font-size:0.94rem; margin-bottom:22px; }
+  .loginwall .btn{
+    display:inline-block; padding:13px 26px; border-radius:3px; font-weight:600; font-size:0.94rem;
+    background:var(--brass); color:var(--ink);
+  }
+
   footer{ background:var(--ink); border-top:1px solid var(--line); padding:28px 0; }
   footer .wrap{ display:flex; justify-content:space-between; color:var(--mist); font-size:0.82rem; flex-wrap:wrap; gap:8px; max-width:1120px; }
 
@@ -140,6 +156,7 @@
 <nav>
   <div class="navwrap">
     <div class="logo">Cyber<span>Web</span> Development</div>
+    <span class="nav-auth" id="auth-slot" style="font-size:0.85rem;"></span>
     <a href="index.html" class="back-link">← Retour au site</a>
   </div>
 </nav>
@@ -154,6 +171,14 @@
 
 <section class="formsection">
   <div class="wrap">
+
+    <div class="loginwall" id="loginwall">
+      <span class="eyebrow">Connexion requise</span>
+      <h2>Connectez-vous pour démarrer un projet</h2>
+      <p>Pour envoyer une demande de projet, vous devez d'abord vous connecter avec votre email.</p>
+      <a href="login.html?redirect=demarrer.html" class="btn">Se connecter</a>
+    </div>
+
     <form id="project-form">
 
       <fieldset>
@@ -384,6 +409,28 @@
     <span>cyberweb.development02@gmail.com · +212 6 48 13 22 01</span>
   </div>
 </footer>
+
+<script src="auth.js"></script>
+<script>
+  cwdRenderAuthSlot();
+
+  (function () {
+    const loggedInEmail = cwdGetLoggedInEmail();
+    const loginwall = document.getElementById('loginwall');
+    const form = document.getElementById('project-form');
+
+    if (!loggedInEmail) {
+      loginwall.classList.add('show');
+      form.style.display = 'none';
+      return;
+    }
+
+    const clientEmailField = document.getElementById('client_email');
+    if (clientEmailField && !clientEmailField.value) {
+      clientEmailField.value = loggedInEmail;
+    }
+  })();
+</script>
 
 <script>
   // ---- SETUP REQUIRED ----
