@@ -19,6 +19,7 @@
     --slate:#2B2F36;
     --mist:#C7D2DA;
     --line: rgba(246,244,238,0.14);
+    --green:#2E7D46;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
@@ -40,10 +41,7 @@
     color:var(--brass);
   }
 
-  nav{
-    background:var(--ink);
-    border-bottom:1px solid var(--line);
-  }
+  nav{ background:var(--ink); border-bottom:1px solid var(--line); }
   nav .navwrap{
     max-width:1120px; margin:0 auto; padding:0 28px;
     display:flex; align-items:center; justify-content:space-between; height:68px;
@@ -53,46 +51,49 @@
   .back-link{ color:var(--mist); font-size:0.9rem; }
   .back-link:hover{ color:var(--whitewash); }
 
-  main{
-    flex:1;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:48px 24px;
-  }
+  main{ flex:1; display:flex; align-items:center; justify-content:center; padding:48px 24px; }
   .login-box{
-    background:#fff;
-    border:1px solid var(--whitewash-2);
-    border-radius:8px;
-    padding:44px 40px;
-    max-width:420px;
-    width:100%;
+    background:#fff; border:1px solid var(--whitewash-2); border-radius:8px;
+    padding:44px 40px; max-width:440px; width:100%;
   }
   .login-box h1{ font-size:1.6rem; margin:10px 0 8px; color:var(--ink); }
   .login-box p{ color:#5a5f66; font-size:0.94rem; margin-bottom:26px; }
   .field{ display:flex; flex-direction:column; gap:6px; }
   label{ font-size:0.88rem; font-weight:600; color:var(--ink); }
   input{
-    font-family:'Work Sans', sans-serif;
-    font-size:0.98rem;
-    padding:13px 14px;
-    border:1px solid #D9D4C6;
-    border-radius:4px;
-    background:#fff;
-    color:var(--slate);
+    font-family:'Work Sans', sans-serif; font-size:0.98rem; padding:13px 14px;
+    border:1px solid #D9D4C6; border-radius:4px; background:#fff; color:var(--slate);
+    width:100%;
   }
   input:focus{ outline:none; border-color:var(--brass); }
-  .error{
-    color:#B33A3A; font-size:0.86rem; margin-top:8px; display:none;
+  input.code-input{
+    font-family:'IBM Plex Mono', monospace; font-size:1.3rem; letter-spacing:0.3em;
+    text-align:center;
   }
+  .error{ color:#B33A3A; font-size:0.86rem; margin-top:10px; display:none; }
   .error.show{ display:block; }
+  .success{
+    color:var(--green); font-size:0.98rem; margin-top:10px; display:none;
+    font-weight:600; align-items:center; gap:8px;
+  }
+  .success.show{ display:flex; }
   .btn{
     display:inline-block; width:100%; margin-top:20px; padding:14px 26px; border-radius:3px;
     font-weight:600; font-size:0.96rem; border:none; cursor:pointer;
-    background:var(--brass); color:var(--ink); transition:transform .15s ease;
+    background:var(--brass); color:var(--ink); transition:transform .15s ease, opacity .15s ease;
   }
   .btn:hover{ transform:translateY(-2px); }
+  .btn:disabled{ opacity:0.55; cursor:not-allowed; transform:none; }
+  .btn-secondary{
+    background:none; border:1px solid #D9D4C6; color:var(--ink);
+    margin-top:12px;
+  }
   .note{ font-size:0.82rem; color:#8a8f96; margin-top:18px; text-align:center; }
+  .step{ display:none; }
+  .step.active{ display:block; }
+  .sent-to{ font-size:0.88rem; color:#5a5f66; margin-bottom:18px; }
+  .sent-to strong{ color:var(--ink); }
+  .attempts-note{ font-size:0.82rem; color:#8a8f96; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -106,40 +107,190 @@
 
 <main>
   <div class="login-box">
-    <span class="eyebrow">Connexion</span>
-    <h1>Accédez à votre espace</h1>
-    <p>Entrez votre email pour continuer. Aucun mot de passe requis.</p>
-    <form id="login-form">
-      <div class="field">
-        <label for="login_email">Email</label>
-        <input type="email" id="login_email" name="login_email" required placeholder="vous@exemple.com">
-      </div>
-      <div class="error" id="login-error">Veuillez entrer un email valide.</div>
-      <button type="submit" class="btn">Se connecter</button>
-    </form>
+
+    <!-- STEP 1: email entry -->
+    <div class="step active" id="step-email">
+      <span class="eyebrow">Connexion</span>
+      <h1>Accédez à votre espace</h1>
+      <p>Entrez votre email — nous vous envoyons un code de vérification à 8 chiffres.</p>
+      <form id="email-form">
+        <div class="field">
+          <label for="login_email">Email</label>
+          <input type="email" id="login_email" name="login_email" required placeholder="vous@exemple.com">
+        </div>
+        <div class="error" id="email-error">Veuillez entrer un email valide.</div>
+        <button type="submit" class="btn" id="send-code-btn">Envoyer le code</button>
+      </form>
+    </div>
+
+    <!-- STEP 2: code entry -->
+    <div class="step" id="step-code">
+      <span class="eyebrow">Vérification</span>
+      <h1>Entrez votre code</h1>
+      <p class="sent-to">Code envoyé à <strong id="sent-to-email"></strong>. Vérifiez vos courriers indésirables si besoin.</p>
+      <form id="code-form">
+        <div class="field">
+          <label for="code_input">Code à 8 chiffres</label>
+          <input type="text" id="code_input" name="code_input" class="code-input" inputmode="numeric" maxlength="8" placeholder="00000000" required>
+        </div>
+        <div class="error" id="code-error"></div>
+        <div class="success" id="code-success">✅ Email vérifié</div>
+        <p class="attempts-note" id="attempts-note"></p>
+        <button type="submit" class="btn" id="verify-btn">Vérifier</button>
+        <button type="button" class="btn btn-secondary" id="resend-btn">Renvoyer le code</button>
+      </form>
+    </div>
+
     <p class="note">En vous connectant, vous pourrez démarrer un projet avec nous.</p>
   </div>
 </main>
 
-<script src="auth.js?v=2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="auth.js?v=4"></script>
 <script>
-  document.getElementById('login-form').addEventListener('submit', function (e) {
+  emailjs.init(CWD_EMAILJS_PUBLIC_KEY);
+
+  const stepEmail = document.getElementById('step-email');
+  const stepCode = document.getElementById('step-code');
+  const emailForm = document.getElementById('email-form');
+  const emailInput = document.getElementById('login_email');
+  const emailError = document.getElementById('email-error');
+  const sendBtn = document.getElementById('send-code-btn');
+
+  const codeForm = document.getElementById('code-form');
+  const codeInput = document.getElementById('code_input');
+  const codeError = document.getElementById('code-error');
+  const codeSuccess = document.getElementById('code-success');
+  const attemptsNote = document.getElementById('attempts-note');
+  const verifyBtn = document.getElementById('verify-btn');
+  const resendBtn = document.getElementById('resend-btn');
+  const sentToEmail = document.getElementById('sent-to-email');
+
+  let resendTimer = null;
+
+  function goToStep(step) {
+    stepEmail.classList.remove('active');
+    stepCode.classList.remove('active');
+    step.classList.add('active');
+  }
+
+  function updateResendButton() {
+    if (cwdCanResend()) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Renvoyer le code';
+      if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+    } else {
+      resendBtn.disabled = true;
+      resendBtn.textContent = `Renvoyer le code (${cwdResendCooldownRemainingSeconds()}s)`;
+    }
+  }
+
+  function startResendCountdown() {
+    updateResendButton();
+    if (resendTimer) clearInterval(resendTimer);
+    resendTimer = setInterval(updateResendButton, 1000);
+  }
+
+  // Resume an in-progress verification if the page was reloaded
+  (function resumeIfPending() {
+    const pending = cwdGetPendingVerification();
+    if (pending) {
+      sentToEmail.textContent = pending.email;
+      goToStep(stepCode);
+      startResendCountdown();
+    }
+  })();
+
+  emailForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    const emailInput = document.getElementById('login_email');
-    const errorBox = document.getElementById('login-error');
     const email = emailInput.value.trim();
 
     if (!cwdIsValidEmail(email)) {
-      errorBox.classList.add('show');
+      emailError.classList.add('show');
       return;
     }
-    errorBox.classList.remove('show');
+    emailError.classList.remove('show');
 
-    cwdLogin(email);
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Envoi en cours...';
 
-    const params = new URLSearchParams(window.location.search);
-    const redirect = params.get('redirect');
-    window.location.href = redirect ? redirect : 'index.html';
+    cwdSendVerificationCode(email)
+      .then(function () {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Envoyer le code';
+        sentToEmail.textContent = email;
+        codeError.classList.remove('show');
+        codeSuccess.classList.remove('show');
+        attemptsNote.textContent = '';
+        codeInput.value = '';
+        goToStep(stepCode);
+        startResendCountdown();
+      })
+      .catch(function (err) {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Envoyer le code';
+        emailError.textContent = "L'envoi du code a échoué. Vérifiez votre connexion et réessayez.";
+        emailError.classList.add('show');
+      });
+  });
+
+  resendBtn.addEventListener('click', function () {
+    if (!cwdCanResend()) return;
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Envoi en cours...';
+
+    cwdResendVerificationCode()
+      .then(function () {
+        codeError.classList.remove('show');
+        startResendCountdown();
+      })
+      .catch(function () {
+        codeError.textContent = "Le renvoi a échoué. Réessayez dans un instant.";
+        codeError.classList.add('show');
+        updateResendButton();
+      });
+  });
+
+  codeForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const result = cwdVerifyCode(codeInput.value);
+
+    if (result.success) {
+      codeError.classList.remove('show');
+      codeSuccess.classList.add('show');
+      verifyBtn.disabled = true;
+      resendBtn.style.display = 'none';
+      attemptsNote.textContent = '';
+
+      setTimeout(function () {
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        window.location.href = redirect ? redirect : 'index.html';
+      }, 900);
+      return;
+    }
+
+    codeSuccess.classList.remove('show');
+
+    if (result.reason === 'expired_time') {
+      codeError.textContent = 'Ce code a expiré (15 minutes écoulées). Demandez-en un nouveau.';
+      codeError.classList.add('show');
+      attemptsNote.textContent = '';
+      verifyBtn.disabled = true;
+    } else if (result.reason === 'expired_attempts') {
+      codeError.textContent = 'Trop de tentatives incorrectes. Ce code est expiré — demandez-en un nouveau.';
+      codeError.classList.add('show');
+      attemptsNote.textContent = '';
+      verifyBtn.disabled = true;
+    } else if (result.reason === 'wrong') {
+      codeError.textContent = 'Code incorrect. Réessayez.';
+      codeError.classList.add('show');
+      attemptsNote.textContent = `Tentatives restantes : ${result.attemptsLeft}`;
+    } else {
+      codeError.textContent = 'Aucun code en attente. Demandez-en un nouveau.';
+      codeError.classList.add('show');
+      verifyBtn.disabled = true;
+    }
   });
 </script>
 
