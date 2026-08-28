@@ -365,13 +365,14 @@
         </div>
       </fieldset>
 
-      <div class="submitbar">
-        <button type="submit" class="btn btn-primary">Envoyer ma demande</button>
-        <span class="submit-note">Ouvre votre application email avec toutes vos réponses déjà préparées — il ne reste qu'à confirmer l'envoi.</span>
+      <div class="submitbar" id="submitbar">
+        <button type="submit" class="btn btn-primary" id="submit-btn">Envoyer ma demande</button>
+        <span class="submit-note">Vos réponses sont envoyées directement — aucune application email ne s'ouvre.</span>
       </div>
 
       <div class="confirm" id="confirm-box">
-        Votre client email va s'ouvrir avec un message pré-rempli à destination de <strong>cyberweb.development02@gmail.com</strong>. Si rien ne s'ouvre automatiquement, vérifiez qu'une application email est configurée sur cet appareil, ou écrivez-nous directement à cette adresse.
+        <span id="confirm-success">✅ Votre demande a bien été envoyée. Nous vous répondrons rapidement.</span>
+        <span id="confirm-error" style="display:none;">⚠️ L'envoi a échoué. Vérifiez votre connexion et réessayez, ou écrivez-nous directement à <strong>cyberweb.development02@gmail.com</strong>.</span>
       </div>
     </form>
   </div>
@@ -385,9 +386,20 @@
 </footer>
 
 <script>
-  document.getElementById('project-form').addEventListener('submit', function(e){
+  // ---- SETUP REQUIRED ----
+  // 1. Sign up at https://formspree.io with cyberweb.development02@gmail.com
+  // 2. Create a form, point it at cyberweb.development02@gmail.com
+  // 3. Copy the endpoint (looks like https://formspree.io/f/XXXXXXXX)
+  // 4. Paste it below, replacing YOUR_FORM_ID
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/moeqaojr';
+
+  document.getElementById('project-form').addEventListener('submit', async function(e){
     e.preventDefault();
     const f = e.target;
+    const btn = document.getElementById('submit-btn');
+    const confirmBox = document.getElementById('confirm-box');
+    const successMsg = document.getElementById('confirm-success');
+    const errorMsg = document.getElementById('confirm-error');
     const v = (name) => (f.elements[name] && f.elements[name].value ? f.elements[name].value.trim() : '');
     const payment = f.querySelector('input[name="payment_method"]:checked');
     const photos = f.querySelector('input[name="photos_available"]:checked');
@@ -439,11 +451,41 @@
       `anything_else: ${v('anything_else')}`
     ];
 
-    const subject = encodeURIComponent(`Nouveau projet — ${v('business_name') || v('client_name') || 'Sans nom'}`);
-    const body = encodeURIComponent(lines.join('\n'));
-    window.location.href = `mailto:cyberweb.development02@gmail.com?subject=${subject}&body=${body}`;
+    const payload = {
+      _subject: `Nouveau projet — ${v('business_name') || v('client_name') || 'Sans nom'}`,
+      message: lines.join('\n'),
+      client_name: v('client_name'),
+      client_email: v('client_email')
+    };
 
-    document.getElementById('confirm-box').classList.add('show');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+    confirmBox.classList.remove('show');
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        successMsg.style.display = 'inline';
+        errorMsg.style.display = 'none';
+        confirmBox.classList.add('show');
+        f.reset();
+        btn.textContent = 'Envoyer ma demande';
+        btn.disabled = false;
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (err) {
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'inline';
+      confirmBox.classList.add('show');
+      btn.textContent = 'Envoyer ma demande';
+      btn.disabled = false;
+    }
   });
 </script>
 
