@@ -25,7 +25,7 @@ const CWD_MAX_ATTEMPTS = 3;
    4. Account > General > copy your Public Key
    5. Paste all three below, replacing the placeholders.
 */
-const CWD_EMAILJS_PUBLIC_KEY  = 'S63ztfOMDRKUmDNN';
+const CWD_EMAILJS_PUBLIC_KEY  = 'S63ztfOMDRKUmDNN-';
 const CWD_EMAILJS_SERVICE_ID  = 'service_v3wwkmf';
 const CWD_EMAILJS_TEMPLATE_ID = 'template_w03uxc6';
 
