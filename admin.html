@@ -21,29 +21,68 @@
   }
   header a{ color:#5a5f66; text-decoration:none; }
   header a:hover{ color:#0E2136; }
-  main{
-    padding:60px 28px;
-    color:#9aa0a6;
-    font-size:0.9rem;
+  .header-links{ display:flex; gap:18px; align-items:center; }
+  main{ padding:40px 28px 80px; max-width:1000px; margin:0 auto; }
+  h1{ font-size:1.3rem; margin-bottom:6px; }
+  .subtitle{ color:#8a8f96; font-size:0.9rem; margin-bottom:28px; }
+
+  .fb-signin-box{
+    max-width:360px; margin:60px auto; border:1px solid #eee; border-radius:6px;
+    padding:28px; text-align:left;
   }
+  .fb-signin-title{ font-weight:600; margin-bottom:6px; }
+  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:16px; }
+  .fb-signin-box input{
+    width:100%; padding:10px 12px; margin-bottom:10px; border:1px solid #D9D4C6;
+    border-radius:4px; font-size:0.92rem;
+  }
+  .fb-signin-box button{
+    width:100%; padding:11px; border:none; border-radius:4px; background:#B8863C;
+    color:#0E2136; font-weight:600; cursor:pointer;
+  }
+  .fb-signin-error{ color:#B33A3A; font-size:0.82rem; margin-top:8px; min-height:1em; }
+
+  .demande-card{
+    border:1px solid #eee; border-radius:6px; padding:20px 22px; margin-bottom:16px;
+  }
+  .demande-card .top-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+  .demande-card .business{ font-weight:600; font-size:1.05rem; }
+  .demande-card .date{ color:#8a8f96; font-size:0.8rem; }
+  .demande-card .meta{ color:#5a5f66; font-size:0.88rem; margin-bottom:10px; }
+  .demande-card pre{
+    white-space:pre-wrap; font-family:'Work Sans',sans-serif; font-size:0.86rem;
+    color:#3a3f46; background:#fafafa; border-radius:4px; padding:12px 14px;
+  }
+  .tier-badge{
+    display:inline-block; font-size:0.72rem; font-weight:600; padding:3px 9px;
+    border-radius:10px; background:#EEEAE0; color:#0E2136; margin-left:8px;
+  }
+  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:40px 0; text-align:center; }
+  .error-state{ color:#B33A3A; }
 </style>
 </head>
 <body>
 
 <header>
   <span>Cyber Web Development — Admin</span>
-  <a href="#" id="logout-link">Déconnexion</a>
+  <span class="header-links">
+    <a href="admin-coupons.html">Coupons</a>
+    <a href="#" id="logout-link">Déconnexion</a>
+  </span>
 </header>
 
 <main>
-  <p>Page admin — contenu à venir.</p>
+  <h1>Demandes de projet</h1>
+  <p class="subtitle">Toutes les demandes soumises via demarrer.html.</p>
+  <div id="demandes-root">
+    <p class="empty-state">Chargement...</p>
+  </div>
 </main>
 
 <script src="auth.js?v=5"></script>
 <script>
   (function () {
     const email = cwdGetLoggedInEmail();
-
     if (!email) {
       window.location.href = 'login.html?redirect=admin.html';
       return;
@@ -52,12 +91,73 @@
       window.location.href = 'index.html';
       return;
     }
-
     document.getElementById('logout-link').addEventListener('click', function (e) {
       e.preventDefault();
       cwdLogout();
       window.location.href = 'index.html';
     });
+  })();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="admin-firebase.js"></script>
+<script>
+  (async function () {
+    const CWD_ADMIN_EMAIL = 'cyberweb.development02@gmail.com';
+    const root = document.getElementById('demandes-root');
+
+    const existingUser = await cwdFirebaseWaitForAuthState();
+    if (!existingUser) {
+      await cwdRenderFirebaseSignIn(root, CWD_ADMIN_EMAIL);
+    }
+
+    loadDemandes();
+
+    async function loadDemandes() {
+      root.innerHTML = '<p class="empty-state">Chargement des demandes...</p>';
+      try {
+        const snap = await cwdDb.collection('demandes').orderBy('created_at', 'desc').get();
+        if (snap.empty) {
+          root.innerHTML = '<p class="empty-state">Aucune demande pour le moment.</p>';
+          return;
+        }
+        root.innerHTML = '';
+        snap.forEach(function (doc) {
+          const d = doc.data();
+          const date = d.created_at && d.created_at.toDate
+            ? d.created_at.toDate().toLocaleString('fr-FR')
+            : '—';
+          const card = document.createElement('div');
+          card.className = 'demande-card';
+          card.innerHTML =
+            '<div class="top-row">' +
+              '<span class="business">' + escapeHtml(d.business_name || d.client_name || 'Sans nom') +
+              (d.package_tier ? '<span class="tier-badge">' + escapeHtml(d.package_tier) + '</span>' : '') +
+              '</span>' +
+              '<span class="date">' + date + '</span>' +
+            '</div>' +
+            '<div class="meta">' +
+              escapeHtml(d.client_name || '') + ' · ' + escapeHtml(d.client_email || '') +
+              (d.discount_code ? ' · Code: ' + escapeHtml(d.discount_code) + ' (' + escapeHtml(String(d.discount_percent || '')) + '%)' : '') +
+            '</div>' +
+            '<pre>' + escapeHtml(d.message || '') + '</pre>';
+          root.appendChild(card);
+        });
+      } catch (err) {
+        root.innerHTML = '<p class="error-state">Impossible de charger les demandes. ' +
+          'Vérifiez que Firebase est bien configuré (firebase-config.js) et que les règles ' +
+          'Firestore sont publiées, et que vous êtes bien connecté.</p>';
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
   })();
 </script>
 

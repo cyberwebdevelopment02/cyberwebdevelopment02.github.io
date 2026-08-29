@@ -393,6 +393,17 @@
         </div>
       </fieldset>
 
+      <fieldset>
+        <legend>
+          <span class="eyebrow">11 — Code de réduction <span class="opt">(optionnel)</span></span>
+        </legend>
+        <div class="field">
+          <label for="discount_code">Code à 16 chiffres</label>
+          <input type="text" id="discount_code" name="discount_code" inputmode="numeric" maxlength="16" placeholder="Laissez vide si aucun">
+          <p class="discount-note" id="discount-note" style="font-size:0.86rem; margin-top:4px;"></p>
+        </div>
+      </fieldset>
+
       <div class="submitbar" id="submitbar">
         <button type="submit" class="btn btn-primary" id="submit-btn">Envoyer ma demande</button>
         <span class="submit-note">Vos réponses sont envoyées directement — aucune application email ne s'ouvre.</span>
@@ -413,6 +424,9 @@
   </div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script src="auth.js?v=5"></script>
 <script>
   cwdRenderAuthSlot();
@@ -450,9 +464,54 @@
     const confirmBox = document.getElementById('confirm-box');
     const successMsg = document.getElementById('confirm-success');
     const errorMsg = document.getElementById('confirm-error');
+    const discountNote = document.getElementById('discount-note');
     const v = (name) => (f.elements[name] && f.elements[name].value ? f.elements[name].value.trim() : '');
     const payment = f.querySelector('input[name="payment_method"]:checked');
     const photos = f.querySelector('input[name="photos_available"]:checked');
+
+    // ---- Discount code check (optional field) ----
+    // A code is only ever consumed once the Formspree send below actually
+    // succeeds — an entered code is never marked used on a failed submission.
+    discountNote.textContent = '';
+    discountNote.style.color = '';
+    let discountCode = v('discount_code');
+    let discountPercent = null;
+    let discountCouponRef = null;
+
+    if (discountCode) {
+      btn.disabled = true;
+      btn.textContent = 'Vérification du code...';
+      try {
+        discountCouponRef = cwdDb.collection('coupons').doc(discountCode);
+        const couponSnap = await discountCouponRef.get();
+        if (!couponSnap.exists) {
+          discountNote.textContent = 'Ce code n\'existe pas.';
+          discountNote.style.color = '#B33A3A';
+          btn.disabled = false;
+          btn.textContent = 'Envoyer ma demande';
+          return;
+        }
+        const couponData = couponSnap.data();
+        if (couponData.used) {
+          discountNote.textContent = 'Ce code a déjà été utilisé.';
+          discountNote.style.color = '#B33A3A';
+          btn.disabled = false;
+          btn.textContent = 'Envoyer ma demande';
+          return;
+        }
+        discountPercent = couponData.discount_percent;
+        discountNote.textContent = `Code valide — ${discountPercent}% de réduction.`;
+        discountNote.style.color = '#2E7D46';
+      } catch (err) {
+        discountNote.textContent = "Impossible de vérifier ce code pour le moment. Réessayez, ou laissez le champ vide.";
+        discountNote.style.color = '#B33A3A';
+        btn.disabled = false;
+        btn.textContent = 'Envoyer ma demande';
+        return;
+      }
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma demande';
+    }
 
     const lines = [
       `Nouvelle demande de projet — ${v('business_name') || 'Client sans nom'}`,
@@ -498,14 +557,19 @@
       `brand_colors: ${v('brand_colors')}`,
       `brand_tone: ${v('brand_tone')}`,
       '',
-      `anything_else: ${v('anything_else')}`
+      `anything_else: ${v('anything_else')}`,
+      '',
+      `discount_code: ${discountCode || 'aucun'}`,
+      `discount_percent: ${discountPercent !== null ? discountPercent + '%' : 'N/A'}`
     ];
 
     const payload = {
       _subject: `Nouveau projet — ${v('business_name') || v('client_name') || 'Sans nom'}`,
       message: lines.join('\n'),
       client_name: v('client_name'),
-      client_email: v('client_email')
+      client_email: v('client_email'),
+      discount_code: discountCode || '',
+      discount_percent: discountPercent !== null ? discountPercent : ''
     };
 
     btn.disabled = true;
@@ -523,7 +587,28 @@
         successMsg.style.display = 'inline';
         errorMsg.style.display = 'none';
         confirmBox.classList.add('show');
+
+        // Best-effort: store the demande so it shows up in admin.html, and
+        // redeem the coupon so it can't be reused. If either of these fails
+        // (e.g. Firebase not yet configured), the client's request has
+        // already been sent via Formspree, so we don't block or alarm them.
+        try {
+          await cwdDb.collection('demandes').add(Object.assign({}, payload, {
+            created_at: firebase.firestore.FieldValue.serverTimestamp()
+          }));
+        } catch (storeErr) { /* non-blocking */ }
+
+        if (discountCouponRef) {
+          try {
+            await discountCouponRef.update({
+              used: true,
+              used_at: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          } catch (redeemErr) { /* non-blocking */ }
+        }
+
         f.reset();
+        discountNote.textContent = '';
         btn.textContent = 'Envoyer ma demande';
         btn.disabled = false;
       } else {

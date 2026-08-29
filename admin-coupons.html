@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coupons — Admin — Cyber Web Development</title>
+<style>
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ font-family:'Work Sans', sans-serif; background:#fff; color:#0E2136; min-height:100vh; }
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; border-bottom:1px solid #eee; font-size:0.85rem;
+  }
+  header a{ color:#5a5f66; text-decoration:none; }
+  header a:hover{ color:#0E2136; }
+  .header-links{ display:flex; gap:18px; align-items:center; }
+  main{ padding:40px 28px 80px; max-width:760px; margin:0 auto; }
+  h1{ font-size:1.3rem; margin-bottom:6px; }
+  .subtitle{ color:#8a8f96; font-size:0.9rem; margin-bottom:28px; }
+
+  .fb-signin-box{
+    max-width:360px; margin:60px auto; border:1px solid #eee; border-radius:6px;
+    padding:28px; text-align:left;
+  }
+  .fb-signin-title{ font-weight:600; margin-bottom:6px; }
+  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:16px; }
+  .fb-signin-box input{
+    width:100%; padding:10px 12px; margin-bottom:10px; border:1px solid #D9D4C6;
+    border-radius:4px; font-size:0.92rem;
+  }
+  .fb-signin-box button{
+    width:100%; padding:11px; border:none; border-radius:4px; background:#B8863C;
+    color:#0E2136; font-weight:600; cursor:pointer;
+  }
+  .fb-signin-error{ color:#B33A3A; font-size:0.82rem; margin-top:8px; min-height:1em; }
+
+  .generator{
+    display:flex; gap:12px; align-items:flex-end; padding:22px; border:1px solid #eee;
+    border-radius:6px; margin-bottom:32px; flex-wrap:wrap;
+  }
+  .generator .field{ display:flex; flex-direction:column; gap:6px; }
+  .generator label{ font-size:0.82rem; font-weight:600; }
+  .generator select{ padding:9px 10px; border:1px solid #D9D4C6; border-radius:4px; font-size:0.92rem; }
+  .generator button{
+    padding:11px 22px; border:none; border-radius:4px; background:#B8863C; color:#0E2136;
+    font-weight:600; cursor:pointer; font-size:0.92rem;
+  }
+  .generator button:disabled{ opacity:0.6; cursor:not-allowed; }
+  .new-code-box{
+    display:none; margin-bottom:32px; padding:18px 20px; background:#EEEAE0; border-radius:6px;
+  }
+  .new-code-box.show{ display:block; }
+  .new-code-box .code{ font-family:monospace; font-size:1.15rem; letter-spacing:0.05em; font-weight:600; }
+
+  table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
+  th, td{ text-align:left; padding:10px 8px; border-bottom:1px solid #eee; }
+  th{ color:#8a8f96; font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em; }
+  td.code-cell{ font-family:monospace; }
+  .status-active{ color:#2E7D46; font-weight:600; }
+  .status-used{ color:#8a8f96; }
+  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:20px 0; }
+  .error-state{ color:#B33A3A; }
+</style>
+</head>
+<body>
+
+<header>
+  <span>Cyber Web Development — Admin</span>
+  <span class="header-links">
+    <a href="admin.html">Demandes</a>
+    <a href="#" id="logout-link">Déconnexion</a>
+  </span>
+</header>
+
+<main>
+  <h1>Coupons de réduction</h1>
+  <p class="subtitle">Générez un code à 16 chiffres, valable une seule fois.</p>
+  <div id="coupons-root">
+    <p class="empty-state">Chargement...</p>
+  </div>
+</main>
+
+<script src="auth.js?v=5"></script>
+<script>
+  (function () {
+    const email = cwdGetLoggedInEmail();
+    if (!email) {
+      window.location.href = 'login.html?redirect=admin-coupons.html';
+      return;
+    }
+    if (!cwdIsAdmin()) {
+      window.location.href = 'index.html';
+      return;
+    }
+    document.getElementById('logout-link').addEventListener('click', function (e) {
+      e.preventDefault();
+      cwdLogout();
+      window.location.href = 'index.html';
+    });
+  })();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="admin-firebase.js"></script>
+<script>
+  (async function () {
+    const CWD_ADMIN_EMAIL = 'cyberweb.development02@gmail.com';
+    const root = document.getElementById('coupons-root');
+
+    const existingUser = await cwdFirebaseWaitForAuthState();
+    if (!existingUser) {
+      await cwdRenderFirebaseSignIn(root, CWD_ADMIN_EMAIL);
+    }
+
+    buildPage();
+
+    function buildPage() {
+      root.innerHTML =
+        '<div class="generator">' +
+          '<div class="field">' +
+            '<label for="discount-select">Réduction</label>' +
+            '<select id="discount-select">' +
+              [10,15,20,25,30,35,40,45,50].map(function(p){ return '<option value="'+p+'">'+p+'%</option>'; }).join('') +
+            '</select>' +
+          '</div>' +
+          '<button id="generate-btn">Générer un code</button>' +
+        '</div>' +
+        '<div class="new-code-box" id="new-code-box">' +
+          'Nouveau code : <span class="code" id="new-code-value"></span> — <span id="new-code-percent"></span>% de réduction' +
+        '</div>' +
+        '<table>' +
+          '<thead><tr><th>Code</th><th>Réduction</th><th>Statut</th><th>Créé le</th><th>Utilisé le</th></tr></thead>' +
+          '<tbody id="coupons-tbody"></tbody>' +
+        '</table>';
+
+      document.getElementById('generate-btn').addEventListener('click', generateCoupon);
+      loadCoupons();
+    }
+
+    async function generateCoupon() {
+      const btn = document.getElementById('generate-btn');
+      const pct = parseInt(document.getElementById('discount-select').value, 10);
+      btn.disabled = true;
+      btn.textContent = 'Génération...';
+
+      try {
+        let code, taken = true;
+        // 16 digits gives 10^16 possibilities — collision is astronomically
+        // unlikely, but we still check rather than assume.
+        while (taken) {
+          code = cwdGenerateCouponCode();
+          const existing = await cwdDb.collection('coupons').doc(code).get();
+          taken = existing.exists;
+        }
+
+        await cwdDb.collection('coupons').doc(code).set({
+          discount_percent: pct,
+          used: false,
+          created_at: firebase.firestore.FieldValue.serverTimestamp(),
+          used_at: null
+        });
+
+        document.getElementById('new-code-value').textContent = code;
+        document.getElementById('new-code-percent').textContent = pct;
+        document.getElementById('new-code-box').classList.add('show');
+        loadCoupons();
+      } catch (err) {
+        alert('La génération a échoué — vérifiez la configuration Firebase.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Générer un code';
+      }
+    }
+
+    function cwdGenerateCouponCode() {
+      let code = '';
+      for (let i = 0; i < 16; i++) code += Math.floor(Math.random() * 10);
+      return code;
+    }
+
+    async function loadCoupons() {
+      const tbody = document.getElementById('coupons-tbody');
+      try {
+        const snap = await cwdDb.collection('coupons').orderBy('created_at', 'desc').get();
+        tbody.innerHTML = '';
+        if (snap.empty) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun coupon généré.</td></tr>';
+          return;
+        }
+        snap.forEach(function (doc) {
+          const d = doc.data();
+          const created = d.created_at && d.created_at.toDate ? d.created_at.toDate().toLocaleDateString('fr-FR') : '—';
+          const used = d.used_at && d.used_at.toDate ? d.used_at.toDate().toLocaleDateString('fr-FR') : '—';
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td class="code-cell">' + doc.id + '</td>' +
+            '<td>' + d.discount_percent + '%</td>' +
+            '<td class="' + (d.used ? 'status-used' : 'status-active') + '">' + (d.used ? 'Utilisé' : 'Actif') + '</td>' +
+            '<td>' + created + '</td>' +
+            '<td>' + used + '</td>';
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" class="error-state">Impossible de charger les coupons.</td></tr>';
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>
