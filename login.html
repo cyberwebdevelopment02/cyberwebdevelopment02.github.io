@@ -88,6 +88,12 @@
     background:none; border:1px solid #D9D4C6; color:var(--ink);
     margin-top:12px;
   }
+  .btn-link{
+    background:none; border:none; color:#5a5f66; text-decoration:underline;
+    margin-top:14px; padding:6px; font-weight:500; width:auto; display:block;
+    margin-left:auto; margin-right:auto;
+  }
+  .btn-link:hover{ color:var(--ink); transform:none; }
   .note{ font-size:0.82rem; color:#8a8f96; margin-top:18px; text-align:center; }
   .step{ display:none; }
   .step.active{ display:block; }
@@ -138,6 +144,7 @@
         <p class="attempts-note" id="attempts-note"></p>
         <button type="submit" class="btn" id="verify-btn">Vérifier</button>
         <button type="button" class="btn btn-secondary" id="resend-btn">Renvoyer le code</button>
+        <button type="button" class="btn btn-link" id="change-email-btn">Utiliser une autre adresse email</button>
       </form>
     </div>
 
@@ -164,6 +171,7 @@
   const attemptsNote = document.getElementById('attempts-note');
   const verifyBtn = document.getElementById('verify-btn');
   const resendBtn = document.getElementById('resend-btn');
+  const changeEmailBtn = document.getElementById('change-email-btn');
   const sentToEmail = document.getElementById('sent-to-email');
 
   let resendTimer = null;
@@ -249,6 +257,20 @@
         codeError.classList.add('show');
         updateResendButton();
       });
+  });
+
+  changeEmailBtn.addEventListener('click', function () {
+    if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+    cwdClearPendingVerification();
+    codeError.classList.remove('show');
+    codeSuccess.classList.remove('show');
+    attemptsNote.textContent = '';
+    codeInput.value = '';
+    verifyBtn.disabled = false;
+    resendBtn.style.display = '';
+    emailInput.value = sentToEmail.textContent || '';
+    goToStep(stepEmail);
+    emailInput.focus();
   });
 
   codeForm.addEventListener('submit', function (e) {
