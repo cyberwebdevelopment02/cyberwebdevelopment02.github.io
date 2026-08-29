@@ -67,7 +67,7 @@
   <span>Cyber Web Development — Admin</span>
   <span class="header-links">
     <a href="admin-coupons.html">Coupons</a>
-    <a href="#" id="logout-link">Déconnexion</a>
+    <a href="index.html">← Retour au site</a>
   </span>
 </header>
 
@@ -91,11 +91,6 @@
       window.location.href = 'index.html';
       return;
     }
-    document.getElementById('logout-link').addEventListener('click', function (e) {
-      e.preventDefault();
-      cwdLogout();
-      window.location.href = 'index.html';
-    });
   })();
 </script>
 
