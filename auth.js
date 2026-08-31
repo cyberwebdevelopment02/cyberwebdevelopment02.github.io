@@ -78,6 +78,31 @@ function cwdRenderAuthSlot() {
   }
 }
 
+/* ---- Firestore user tracking (best-effort, non-blocking) ----
+   Records/updates a doc in the 'users' collection on successful login, so
+   admin.html can list everyone who has logged in. Only does anything on
+   pages that have already loaded firebase-config.js (currently login.html) —
+   everywhere else cwdDb won't exist yet and this quietly no-ops, since the
+   visitor's login itself must never depend on this succeeding. */
+function cwdRecordUserLogin(email) {
+  if (typeof cwdDb === 'undefined' || !cwdDb) return;
+  const ref = cwdDb.collection('users').doc(email);
+  ref.get().then(function (snap) {
+    if (snap.exists) {
+      return ref.update({
+        last_login: firebase.firestore.FieldValue.serverTimestamp(),
+        login_count: firebase.firestore.FieldValue.increment(1)
+      });
+    }
+    return ref.set({
+      email: email,
+      first_login: firebase.firestore.FieldValue.serverTimestamp(),
+      last_login: firebase.firestore.FieldValue.serverTimestamp(),
+      login_count: 1
+    });
+  }).catch(function () { /* non-blocking */ });
+}
+
 /* ---- Email verification codes ---- */
 
 function cwdGenerateCode() {
@@ -182,6 +207,7 @@ function cwdVerifyCode(inputCode) {
   if (String(inputCode).trim() === String(pending.code)) {
     cwdLogin(pending.email);
     cwdClearPendingVerification();
+    cwdRecordUserLogin(pending.email);
     return { success: true, reason: 'ok', email: pending.email };
   }
 

@@ -7,76 +7,158 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Cyber Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --ink:#0E2136;
+    --ink-2:#132C46;
+    --atlantic:#1C4870;
+    --whitewash:#F6F4EE;
+    --whitewash-2:#EEEAE0;
+    --brass:#B8863C;
+    --brass-light:#D9AE6B;
+    --slate:#2B2F36;
+    --mist:#C7D2DA;
+    --line: rgba(246,244,238,0.14);
+    --green:#2E7D46;
+    --red:#B33A3A;
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
     font-family:'Work Sans', sans-serif;
-    background:#fff;
-    color:#0E2136;
+    background:var(--whitewash);
+    color:var(--slate);
     min-height:100vh;
   }
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px; border-bottom:1px solid #eee; font-size:0.85rem;
+  h1,h2{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); }
+  a{ color:inherit; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
   }
-  header a{ color:#5a5f66; text-decoration:none; }
-  header a:hover{ color:#0E2136; }
-  .header-links{ display:flex; gap:18px; align-items:center; }
-  main{ padding:40px 28px 80px; max-width:1000px; margin:0 auto; }
-  h1{ font-size:1.3rem; margin-bottom:6px; }
-  .subtitle{ color:#8a8f96; font-size:0.9rem; margin-bottom:28px; }
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,33,54,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .navwrap{
+    max-width:1120px; margin:0 auto; padding:0 28px;
+    display:flex; align-items:center; justify-content:space-between; height:68px;
+    flex-wrap:wrap; row-gap:8px;
+  }
+  .logo{ font-family:'Fraunces', serif; font-size:1.15rem; color:var(--whitewash); font-weight:600; }
+  .logo span{ color:var(--brass-light); }
+  .header-links{ display:flex; gap:22px; align-items:center; font-size:0.9rem; }
+  .header-links a{ color:var(--mist); text-decoration:none; transition:color .2s; }
+  .header-links a:hover{ color:var(--whitewash); }
+  .header-links a.active{ color:var(--brass-light); font-weight:600; }
+
+  main{ padding:48px 28px 90px; max-width:1000px; margin:0 auto; }
+  section + section{ margin-top:64px; }
+  .section-head{ margin-bottom:24px; }
+  h1{ font-size:1.5rem; margin-bottom:6px; }
+  h2{ font-size:1.2rem; margin-bottom:4px; }
+  .subtitle{ color:#6b7076; font-size:0.92rem; }
 
   .fb-signin-box{
-    max-width:360px; margin:60px auto; border:1px solid #eee; border-radius:6px;
-    padding:28px; text-align:left;
+    max-width:360px; margin:60px auto; border:1px solid var(--whitewash-2); border-radius:8px;
+    background:#fff; padding:32px; text-align:left;
   }
-  .fb-signin-title{ font-weight:600; margin-bottom:6px; }
-  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:16px; }
+  .fb-signin-title{ font-weight:600; margin-bottom:6px; color:var(--ink); }
+  .fb-signin-note{ color:#6b7076; font-size:0.85rem; margin-bottom:16px; }
   .fb-signin-box input{
-    width:100%; padding:10px 12px; margin-bottom:10px; border:1px solid #D9D4C6;
-    border-radius:4px; font-size:0.92rem;
+    width:100%; padding:11px 13px; margin-bottom:10px; border:1px solid #D9D4C6;
+    border-radius:4px; font-size:0.92rem; font-family:'Work Sans', sans-serif;
   }
+  .fb-signin-box input:focus{ outline:none; border-color:var(--brass); }
   .fb-signin-box button{
-    width:100%; padding:11px; border:none; border-radius:4px; background:#B8863C;
-    color:#0E2136; font-weight:600; cursor:pointer;
+    width:100%; padding:12px; border:none; border-radius:3px; background:var(--brass);
+    color:var(--ink); font-weight:600; cursor:pointer; transition:transform .15s ease;
   }
-  .fb-signin-error{ color:#B33A3A; font-size:0.82rem; margin-top:8px; min-height:1em; }
+  .fb-signin-box button:hover{ transform:translateY(-2px); }
+  .fb-signin-error{ color:var(--red); font-size:0.82rem; margin-top:8px; min-height:1em; }
 
-  .demande-card{
-    border:1px solid #eee; border-radius:6px; padding:20px 22px; margin-bottom:16px;
+  /* Users table */
+  .table-wrap{
+    background:#fff; border:1px solid var(--whitewash-2); border-radius:6px; overflow:hidden;
   }
-  .demande-card .top-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
-  .demande-card .business{ font-weight:600; font-size:1.05rem; }
+  table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
+  th, td{ text-align:left; padding:12px 16px; border-bottom:1px solid var(--whitewash-2); }
+  th{ color:#8a8f96; font-weight:600; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; background:var(--whitewash); }
+  tr:last-child td{ border-bottom:none; }
+  td.email-cell{ font-family:'IBM Plex Mono', monospace; font-size:0.83rem; color:var(--ink); }
+  .count-badge{
+    display:inline-block; font-size:0.75rem; font-weight:600; padding:2px 9px;
+    border-radius:10px; background:var(--whitewash-2); color:var(--ink);
+  }
+
+  /* Demandes */
+  .demande-card{
+    background:#fff; border:1px solid var(--whitewash-2); border-radius:6px;
+    padding:20px 22px; margin-bottom:16px; transition:border-color .2s;
+  }
+  .demande-card:hover{ border-color:var(--brass); }
+  .demande-card .top-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; flex-wrap:wrap; gap:6px; }
+  .demande-card .business{ font-weight:600; font-size:1.05rem; color:var(--ink); }
   .demande-card .date{ color:#8a8f96; font-size:0.8rem; }
   .demande-card .meta{ color:#5a5f66; font-size:0.88rem; margin-bottom:10px; }
   .demande-card pre{
     white-space:pre-wrap; font-family:'Work Sans',sans-serif; font-size:0.86rem;
-    color:#3a3f46; background:#fafafa; border-radius:4px; padding:12px 14px;
+    color:#3a3f46; background:var(--whitewash); border-radius:4px; padding:12px 14px;
   }
   .tier-badge{
     display:inline-block; font-size:0.72rem; font-weight:600; padding:3px 9px;
-    border-radius:10px; background:#EEEAE0; color:#0E2136; margin-left:8px;
+    border-radius:10px; background:var(--whitewash-2); color:var(--brass); margin-left:8px;
+    font-family:'IBM Plex Mono', monospace;
   }
-  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:40px 0; text-align:center; }
-  .error-state{ color:#B33A3A; }
+
+  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:30px 16px; text-align:center; }
+  .error-state{ color:var(--red); }
 </style>
 </head>
 <body>
 
-<header>
-  <span>Cyber Web Development — Admin</span>
-  <span class="header-links">
-    <a href="admin-coupons.html">Coupons</a>
-    <a href="index.html">← Retour au site</a>
-  </span>
-</header>
+<nav>
+  <div class="navwrap">
+    <div class="logo">Cyber<span>Web</span> Development — <span style="color:var(--mist); font-family:'Work Sans', sans-serif; font-weight:400; font-size:0.9rem;">Admin</span></div>
+    <span class="header-links">
+      <a href="admin.html" class="active">Demandes &amp; utilisateurs</a>
+      <a href="admin-coupons.html">Coupons</a>
+      <a href="index.html">← Retour au site</a>
+    </span>
+  </div>
+</nav>
 
 <main>
-  <h1>Demandes de projet</h1>
-  <p class="subtitle">Toutes les demandes soumises via demarrer.html.</p>
-  <div id="demandes-root">
-    <p class="empty-state">Chargement...</p>
-  </div>
+
+  <section id="users-section">
+    <div class="section-head">
+      <span class="eyebrow">Comptes</span>
+      <h1>Utilisateurs</h1>
+      <p class="subtitle">Toute personne s'étant déjà connectée via le code email.</p>
+    </div>
+    <div id="users-root" class="table-wrap">
+      <p class="empty-state">Chargement...</p>
+    </div>
+  </section>
+
+  <section id="demandes-section">
+    <div class="section-head">
+      <span class="eyebrow">Projets</span>
+      <h1>Demandes de projet</h1>
+      <p class="subtitle">Toutes les demandes soumises via demarrer.html.</p>
+    </div>
+    <div id="demandes-root">
+      <p class="empty-state">Chargement...</p>
+    </div>
+  </section>
+
 </main>
 
 <script src="auth.js?v=5"></script>
@@ -102,24 +184,64 @@
 <script>
   (async function () {
     const CWD_ADMIN_EMAIL = 'cyberweb.development02@gmail.com';
-    const root = document.getElementById('demandes-root');
+    const usersRoot = document.getElementById('users-root');
+    const demandesRoot = document.getElementById('demandes-root');
 
     const existingUser = await cwdFirebaseWaitForAuthState();
     if (!existingUser) {
-      await cwdRenderFirebaseSignIn(root, CWD_ADMIN_EMAIL);
+      // Sign-in gates both sections at once; reuse the same box for whichever
+      // one renders first, then load both once signed in.
+      await cwdRenderFirebaseSignIn(usersRoot, CWD_ADMIN_EMAIL);
     }
 
+    loadUsers();
     loadDemandes();
 
+    async function loadUsers() {
+      usersRoot.innerHTML = '<p class="empty-state">Chargement des utilisateurs...</p>';
+      try {
+        const snap = await cwdDb.collection('users').orderBy('last_login', 'desc').get();
+        if (snap.empty) {
+          usersRoot.innerHTML = '<p class="empty-state">Aucun utilisateur pour le moment.</p>';
+          return;
+        }
+        let rows = '';
+        snap.forEach(function (doc) {
+          const d = doc.data();
+          const first = d.first_login && d.first_login.toDate
+            ? d.first_login.toDate().toLocaleDateString('fr-FR')
+            : '—';
+          const last = d.last_login && d.last_login.toDate
+            ? d.last_login.toDate().toLocaleString('fr-FR')
+            : '—';
+          rows +=
+            '<tr>' +
+              '<td class="email-cell">' + escapeHtml(d.email || doc.id) + '</td>' +
+              '<td><span class="count-badge">' + (d.login_count || 1) + '</span></td>' +
+              '<td>' + first + '</td>' +
+              '<td>' + last + '</td>' +
+            '</tr>';
+        });
+        usersRoot.innerHTML =
+          '<table>' +
+            '<thead><tr><th>Email</th><th>Connexions</th><th>Première connexion</th><th>Dernière connexion</th></tr></thead>' +
+            '<tbody>' + rows + '</tbody>' +
+          '</table>';
+      } catch (err) {
+        usersRoot.innerHTML = '<p class="error-state">Impossible de charger les utilisateurs. ' +
+          'Vérifiez que la collection "users" existe et que les règles Firestore l\'autorisent.</p>';
+      }
+    }
+
     async function loadDemandes() {
-      root.innerHTML = '<p class="empty-state">Chargement des demandes...</p>';
+      demandesRoot.innerHTML = '<p class="empty-state">Chargement des demandes...</p>';
       try {
         const snap = await cwdDb.collection('demandes').orderBy('created_at', 'desc').get();
         if (snap.empty) {
-          root.innerHTML = '<p class="empty-state">Aucune demande pour le moment.</p>';
+          demandesRoot.innerHTML = '<p class="empty-state">Aucune demande pour le moment.</p>';
           return;
         }
-        root.innerHTML = '';
+        demandesRoot.innerHTML = '';
         snap.forEach(function (doc) {
           const d = doc.data();
           const date = d.created_at && d.created_at.toDate
@@ -139,10 +261,10 @@
               (d.discount_code ? ' · Code: ' + escapeHtml(d.discount_code) + ' (' + escapeHtml(String(d.discount_percent || '')) + '%)' : '') +
             '</div>' +
             '<pre>' + escapeHtml(d.message || '') + '</pre>';
-          root.appendChild(card);
+          demandesRoot.appendChild(card);
         });
       } catch (err) {
-        root.innerHTML = '<p class="error-state">Impossible de charger les demandes. ' +
+        demandesRoot.innerHTML = '<p class="error-state">Impossible de charger les demandes. ' +
           'Vérifiez que Firebase est bien configuré (firebase-config.js) et que les règles ' +
           'Firestore sont publiées, et que vous êtes bien connecté.</p>';
       }
