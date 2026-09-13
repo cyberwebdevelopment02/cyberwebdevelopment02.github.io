@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utilisateurs — Admin — Cyber Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E2136;
+    --ink-2:#132C46;
+    --atlantic:#1C4870;
+    --whitewash:#F6F4EE;
+    --whitewash-2:#EEEAE0;
+    --brass:#B8863C;
+    --brass-light:#D9AE6B;
+    --slate:#2B2F36;
+    --mist:#C7D2DA;
+    --line: rgba(246,244,238,0.14);
+    --green:#2E7D46;
+    --red:#B33A3A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:'Work Sans', sans-serif; background:var(--whitewash); color:var(--slate); min-height:100vh; }
+  h1{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); }
+  a{ color:inherit; text-decoration:none; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,33,54,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .navwrap{
+    max-width:1120px; margin:0 auto; padding:0 28px;
+    display:flex; align-items:center; justify-content:space-between; height:68px; flex-wrap:wrap; gap:10px;
+  }
+  .logo{ font-family:'Fraunces', serif; font-size:1.15rem; color:var(--whitewash); font-weight:600; }
+  .logo span{ color:var(--brass-light); }
+  .admin-links{ display:flex; gap:24px; align-items:center; }
+  .admin-links a{ color:var(--mist); font-size:0.88rem; transition:color .2s; }
+  .admin-links a:hover{ color:var(--whitewash); }
+  .admin-links a.active{ color:var(--brass-light); font-weight:600; }
+  .back-link{ color:var(--mist); font-size:0.88rem; }
+  .back-link:hover{ color:var(--whitewash); }
+
+  main{ max-width:760px; margin:0 auto; padding:48px 28px 96px; }
+  .page-head{ margin-bottom:32px; }
+  .page-head h1{ font-size:1.6rem; margin-bottom:6px; }
+  .subtitle{ color:#6b7076; font-size:0.94rem; }
+
+  .fb-signin-box{
+    max-width:380px; margin:60px auto; border:1px solid var(--whitewash-2); border-radius:8px;
+    padding:32px; text-align:left; background:#fff;
+  }
+  .fb-signin-title{ font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem; color:var(--ink); margin-bottom:6px; }
+  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:18px; }
+  .fb-signin-box input{
+    width:100%; padding:12px 14px; margin-bottom:10px; border:1px solid #D9D4C6;
+    border-radius:4px; font-size:0.94rem; font-family:'Work Sans',sans-serif;
+  }
+  .fb-signin-box input:focus{ outline:none; border-color:var(--brass); }
+  .fb-signin-box button{
+    width:100%; padding:12px; border:none; border-radius:4px; background:var(--brass);
+    color:var(--ink); font-weight:600; cursor:pointer; font-size:0.94rem; transition:transform .15s ease;
+  }
+  .fb-signin-box button:hover{ transform:translateY(-2px); }
+  .fb-signin-error{ color:var(--red); font-size:0.82rem; margin-top:8px; min-height:1em; }
+
+  .count-note{ color:#6b7076; font-size:0.86rem; margin-bottom:16px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:0.9rem; background:#fff; border:1px solid var(--whitewash-2); border-radius:6px; overflow:hidden; }
+  th, td{ text-align:left; padding:12px 14px; border-bottom:1px solid var(--whitewash-2); }
+  th{ color:#8a8f96; font-weight:600; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; background:var(--whitewash); }
+  td.email-cell{ font-family:'IBM Plex Mono',monospace; color:var(--ink); }
+  tr.is-admin td.email-cell{ color:var(--brass); font-weight:600; }
+  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:20px 14px; }
+  .error-state{ color:var(--red); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="navwrap">
+    <div class="logo">Cyber<span>Web</span> Development</div>
+    <span class="admin-links">
+      <a href="admin.html">Demandes</a>
+      <a href="admin-coupons.html">Coupons</a>
+      <a href="admin-utilisateurs.html" class="active">Utilisateurs</a>
+      <a href="index.html" class="back-link">← Retour au site</a>
+    </span>
+  </div>
+</nav>
+
+<main>
+  <div class="page-head">
+    <span class="eyebrow">Admin</span>
+    <h1>Utilisateurs</h1>
+    <p class="subtitle">Emails de toutes les personnes qui se sont déjà connectées au site.</p>
+  </div>
+  <div id="users-root">
+    <p class="empty-state">Chargement...</p>
+  </div>
+</main>
+
+<script src="auth.js?v=5"></script>
+<script>
+  (function () {
+    const email = cwdGetLoggedInEmail();
+    if (!email) {
+      window.location.href = 'login.html?redirect=admin-utilisateurs.html';
+      return;
+    }
+    if (!cwdIsAdmin()) {
+      window.location.href = 'index.html';
+      return;
+    }
+  })();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="admin-firebase.js"></script>
+<script>
+  (async function () {
+    const CWD_ADMIN_EMAIL = 'cyberweb.development02@gmail.com';
+    const root = document.getElementById('users-root');
+
+    const existingUser = await cwdFirebaseWaitForAuthState();
+    if (!existingUser) {
+      await cwdRenderFirebaseSignIn(root, CWD_ADMIN_EMAIL);
+    }
+
+    loadUsers();
+
+    async function loadUsers() {
+      root.innerHTML = '<p class="empty-state">Chargement des utilisateurs...</p>';
+      try {
+        const snap = await cwdDb.collection('users').orderBy('last_login_at', 'desc').get();
+        if (snap.empty) {
+          root.innerHTML = '<p class="empty-state">Aucun utilisateur connecté pour le moment.</p>';
+          return;
+        }
+        const table = document.createElement('table');
+        table.innerHTML = '<thead><tr><th>Email</th><th>Dernière connexion</th></tr></thead><tbody id="users-tbody"></tbody>';
+        root.innerHTML = '';
+        const countNote = document.createElement('p');
+        countNote.className = 'count-note';
+        countNote.textContent = snap.size + (snap.size > 1 ? ' utilisateurs' : ' utilisateur');
+        root.appendChild(countNote);
+        root.appendChild(table);
+        const tbody = table.querySelector('#users-tbody');
+        snap.forEach(function (doc) {
+          const d = doc.data();
+          const email = d.email || doc.id;
+          const last = d.last_login_at && d.last_login_at.toDate
+            ? d.last_login_at.toDate().toLocaleString('fr-FR')
+            : '—';
+          const tr = document.createElement('tr');
+          if (email.toLowerCase() === CWD_ADMIN_EMAIL.toLowerCase()) tr.className = 'is-admin';
+          tr.innerHTML =
+            '<td class="email-cell">' + escapeHtml(email) + '</td>' +
+            '<td>' + last + '</td>';
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        root.innerHTML = '<p class="error-state">Impossible de charger les utilisateurs. ' +
+          'Vérifiez que la collection "users" existe et que les règles Firestore ' +
+          'autorisent sa lecture par un admin connecté.</p>';
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  })();
+</script>
+
+</body>
+</html>

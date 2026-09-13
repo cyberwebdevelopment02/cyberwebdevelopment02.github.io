@@ -7,77 +7,138 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coupons — Admin — Cyber Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{ font-family:'Work Sans', sans-serif; background:#fff; color:#0E2136; min-height:100vh; }
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px; border-bottom:1px solid #eee; font-size:0.85rem;
+  :root{
+    --ink:#0E2136;
+    --ink-2:#132C46;
+    --atlantic:#1C4870;
+    --whitewash:#F6F4EE;
+    --whitewash-2:#EEEAE0;
+    --brass:#B8863C;
+    --brass-light:#D9AE6B;
+    --slate:#2B2F36;
+    --mist:#C7D2DA;
+    --line: rgba(246,244,238,0.14);
+    --green:#2E7D46;
+    --red:#B33A3A;
   }
-  header a{ color:#5a5f66; text-decoration:none; }
-  header a:hover{ color:#0E2136; }
-  .header-links{ display:flex; gap:18px; align-items:center; }
-  main{ padding:40px 28px 80px; max-width:760px; margin:0 auto; }
-  h1{ font-size:1.3rem; margin-bottom:6px; }
-  .subtitle{ color:#8a8f96; font-size:0.9rem; margin-bottom:28px; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:'Work Sans', sans-serif; background:var(--whitewash); color:var(--slate); min-height:100vh; }
+  h1{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); }
+  a{ color:inherit; text-decoration:none; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,33,54,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .navwrap{
+    max-width:1120px; margin:0 auto; padding:0 28px;
+    display:flex; align-items:center; justify-content:space-between; height:68px; flex-wrap:wrap; gap:10px;
+  }
+  .logo{ font-family:'Fraunces', serif; font-size:1.15rem; color:var(--whitewash); font-weight:600; }
+  .logo span{ color:var(--brass-light); }
+  .admin-links{ display:flex; gap:24px; align-items:center; }
+  .admin-links a{ color:var(--mist); font-size:0.88rem; transition:color .2s; }
+  .admin-links a:hover{ color:var(--whitewash); }
+  .admin-links a.active{ color:var(--brass-light); font-weight:600; }
+  .back-link{ color:var(--mist); font-size:0.88rem; }
+  .back-link:hover{ color:var(--whitewash); }
+
+  main{ max-width:760px; margin:0 auto; padding:48px 28px 96px; }
+  .page-head{ margin-bottom:32px; }
+  .page-head h1{ font-size:1.6rem; margin-bottom:6px; }
+  .subtitle{ color:#6b7076; font-size:0.94rem; }
 
   .fb-signin-box{
-    max-width:360px; margin:60px auto; border:1px solid #eee; border-radius:6px;
-    padding:28px; text-align:left;
+    max-width:380px; margin:60px auto; border:1px solid var(--whitewash-2); border-radius:8px;
+    padding:32px; text-align:left; background:#fff;
   }
-  .fb-signin-title{ font-weight:600; margin-bottom:6px; }
-  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:16px; }
+  .fb-signin-title{ font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem; color:var(--ink); margin-bottom:6px; }
+  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:18px; }
   .fb-signin-box input{
-    width:100%; padding:10px 12px; margin-bottom:10px; border:1px solid #D9D4C6;
-    border-radius:4px; font-size:0.92rem;
+    width:100%; padding:12px 14px; margin-bottom:10px; border:1px solid #D9D4C6;
+    border-radius:4px; font-size:0.94rem; font-family:'Work Sans',sans-serif;
   }
+  .fb-signin-box input:focus{ outline:none; border-color:var(--brass); }
   .fb-signin-box button{
-    width:100%; padding:11px; border:none; border-radius:4px; background:#B8863C;
-    color:#0E2136; font-weight:600; cursor:pointer;
+    width:100%; padding:12px; border:none; border-radius:4px; background:var(--brass);
+    color:var(--ink); font-weight:600; cursor:pointer; font-size:0.94rem; transition:transform .15s ease;
   }
-  .fb-signin-error{ color:#B33A3A; font-size:0.82rem; margin-top:8px; min-height:1em; }
+  .fb-signin-box button:hover{ transform:translateY(-2px); }
+  .fb-signin-error{ color:var(--red); font-size:0.82rem; margin-top:8px; min-height:1em; }
 
   .generator{
-    display:flex; gap:12px; align-items:flex-end; padding:22px; border:1px solid #eee;
+    display:flex; gap:12px; align-items:flex-end; padding:22px; background:#fff; border:1px solid var(--whitewash-2);
     border-radius:6px; margin-bottom:32px; flex-wrap:wrap;
   }
   .generator .field{ display:flex; flex-direction:column; gap:6px; }
-  .generator label{ font-size:0.82rem; font-weight:600; }
-  .generator select{ padding:9px 10px; border:1px solid #D9D4C6; border-radius:4px; font-size:0.92rem; }
+  .generator label{ font-size:0.82rem; font-weight:600; color:var(--ink); }
+  .generator select{ padding:10px 12px; border:1px solid #D9D4C6; border-radius:4px; font-size:0.92rem; font-family:'Work Sans',sans-serif; }
   .generator button{
-    padding:11px 22px; border:none; border-radius:4px; background:#B8863C; color:#0E2136;
-    font-weight:600; cursor:pointer; font-size:0.92rem;
+    padding:12px 24px; border:none; border-radius:4px; background:var(--brass); color:var(--ink);
+    font-weight:600; cursor:pointer; font-size:0.92rem; transition:transform .15s ease;
   }
-  .generator button:disabled{ opacity:0.6; cursor:not-allowed; }
+  .generator button:hover{ transform:translateY(-2px); }
+  .generator button:disabled{ opacity:0.6; cursor:not-allowed; transform:none; }
   .new-code-box{
-    display:none; margin-bottom:32px; padding:18px 20px; background:#EEEAE0; border-radius:6px;
+    display:none; margin-bottom:32px; padding:18px 20px; background:var(--whitewash-2); border-radius:6px;
+    border:1px solid var(--brass-light);
   }
   .new-code-box.show{ display:block; }
-  .new-code-box .code{ font-family:monospace; font-size:1.15rem; letter-spacing:0.05em; font-weight:600; }
+  .new-code-box .code{ font-family:'IBM Plex Mono',monospace; font-size:1.15rem; letter-spacing:0.05em; font-weight:600; color:var(--ink); }
 
-  table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
-  th, td{ text-align:left; padding:10px 8px; border-bottom:1px solid #eee; }
-  th{ color:#8a8f96; font-weight:600; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em; }
-  td.code-cell{ font-family:monospace; }
-  .status-active{ color:#2E7D46; font-weight:600; }
+  table{ width:100%; border-collapse:collapse; font-size:0.88rem; background:#fff; border:1px solid var(--whitewash-2); border-radius:6px; overflow:hidden; }
+  th, td{ text-align:left; padding:12px 14px; border-bottom:1px solid var(--whitewash-2); }
+  th{ color:#8a8f96; font-weight:600; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.06em; font-family:'IBM Plex Mono',monospace; background:var(--whitewash); }
+  td.code-cell{ font-family:'IBM Plex Mono',monospace; }
+  .status-active{ color:var(--green); font-weight:600; }
   .status-used{ color:#8a8f96; }
-  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:20px 0; }
-  .error-state{ color:#B33A3A; }
+  .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:20px 14px; }
+  .error-state{ color:var(--red); }
+
+  .toolbar{ display:flex; justify-content:flex-end; margin-bottom:18px; }
+  .export-btn{
+    padding:9px 18px; border:1px solid var(--whitewash-2); border-radius:4px; background:#fff;
+    color:var(--ink); font-weight:600; font-size:0.86rem; cursor:pointer; transition:border-color .2s;
+  }
+  .export-btn:hover{ border-color:var(--brass); }
 </style>
 </head>
 <body>
 
-<header>
-  <span>Cyber Web Development — Admin</span>
-  <span class="header-links">
-    <a href="admin.html">Demandes</a>
-    <a href="index.html">← Retour au site</a>
-  </span>
-</header>
+<nav>
+  <div class="navwrap">
+    <div class="logo">Cyber<span>Web</span> Development</div>
+    <span class="admin-links">
+      <a href="admin.html">Demandes</a>
+      <a href="admin-coupons.html" class="active">Coupons</a>
+      <a href="admin-utilisateurs.html">Utilisateurs</a>
+      <a href="index.html" class="back-link">← Retour au site</a>
+    </span>
+  </div>
+</nav>
 
 <main>
-  <h1>Coupons de réduction</h1>
-  <p class="subtitle">Générez un code à 16 chiffres, valable une seule fois.</p>
+  <div class="page-head">
+    <span class="eyebrow">Admin</span>
+    <h1>Coupons de réduction</h1>
+    <p class="subtitle">Générez un code à 16 chiffres, valable une seule fois.</p>
+  </div>
+  <div class="toolbar">
+    <button class="export-btn" id="export-csv-btn">Exporter en CSV</button>
+  </div>
   <div id="coupons-root">
     <p class="empty-state">Chargement...</p>
   </div>
@@ -135,8 +196,11 @@
         '</table>';
 
       document.getElementById('generate-btn').addEventListener('click', generateCoupon);
+      document.getElementById('export-csv-btn').addEventListener('click', exportCsv);
       loadCoupons();
     }
+
+    let loadedCoupons = []; // [{ id, data }]
 
     async function generateCoupon() {
       const btn = document.getElementById('generate-btn');
@@ -184,12 +248,14 @@
       try {
         const snap = await cwdDb.collection('coupons').orderBy('created_at', 'desc').get();
         tbody.innerHTML = '';
+        loadedCoupons = [];
         if (snap.empty) {
           tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucun coupon généré.</td></tr>';
           return;
         }
         snap.forEach(function (doc) {
           const d = doc.data();
+          loadedCoupons.push({ id: doc.id, data: d });
           const created = d.created_at && d.created_at.toDate ? d.created_at.toDate().toLocaleDateString('fr-FR') : '—';
           const used = d.used_at && d.used_at.toDate ? d.used_at.toDate().toLocaleDateString('fr-FR') : '—';
           const tr = document.createElement('tr');
@@ -204,6 +270,37 @@
       } catch (err) {
         tbody.innerHTML = '<tr><td colspan="5" class="error-state">Impossible de charger les coupons.</td></tr>';
       }
+    }
+
+    function exportCsv() {
+      if (!loadedCoupons.length) { alert('Aucun coupon à exporter.'); return; }
+      const rows = [['code', 'reduction_percent', 'statut', 'cree_le', 'utilise_le']];
+      loadedCoupons.forEach(function (entry) {
+        const d = entry.data;
+        const created = d.created_at && d.created_at.toDate ? d.created_at.toDate().toLocaleString('fr-FR') : '';
+        const used = d.used_at && d.used_at.toDate ? d.used_at.toDate().toLocaleString('fr-FR') : '';
+        rows.push([entry.id, d.discount_percent, d.used ? 'Utilisé' : 'Actif', created, used]);
+      });
+      const csv = rows.map(function (row) { return row.map(csvEscape).join(','); }).join('\r\n');
+      downloadFile('coupons-' + new Date().toISOString().slice(0, 10) + '.csv', csv);
+    }
+
+    function csvEscape(val) {
+      const s = String(val == null ? '' : val);
+      if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    }
+
+    function downloadFile(filename, content) {
+      const blob = new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
   })();
 </script>

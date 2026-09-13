@@ -52,6 +52,23 @@ function cwdIsAdmin() {
   return !!email && email === CWD_ADMIN_EMAIL.toLowerCase();
 }
 
+/* Best-effort record of a successful login into the "users" Firestore
+   collection, so admin-utilisateurs.html can list everyone who has ever
+   logged in. Only runs on pages that also load firebase-config.js
+   (currently login.html) — silently does nothing otherwise, and never
+   blocks or breaks the login flow if Firebase isn't configured yet. */
+function cwdRecordUserLogin(email) {
+  if (typeof cwdDb === 'undefined') return;
+  const ref = cwdDb.collection('users').doc(email);
+  ref.get().then(function (snap) {
+    const update = { email: email, last_login_at: firebase.firestore.FieldValue.serverTimestamp() };
+    if (!snap.exists) {
+      update.first_login_at = firebase.firestore.FieldValue.serverTimestamp();
+    }
+    return ref.set(update, { merge: true });
+  }).catch(function () { /* non-blocking */ });
+}
+
 /* Renders the login/logout state into a nav element with id="auth-slot". */
 function cwdRenderAuthSlot() {
   const slot = document.getElementById('auth-slot');
@@ -181,6 +198,7 @@ function cwdVerifyCode(inputCode) {
 
   if (String(inputCode).trim() === String(pending.code)) {
     cwdLogin(pending.email);
+    cwdRecordUserLogin(pending.email);
     cwdClearPendingVerification();
     return { success: true, reason: 'ok', email: pending.email };
   }

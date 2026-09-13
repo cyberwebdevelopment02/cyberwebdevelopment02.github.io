@@ -7,73 +7,149 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Cyber Web Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --ink:#0E2136;
+    --ink-2:#132C46;
+    --atlantic:#1C4870;
+    --whitewash:#F6F4EE;
+    --whitewash-2:#EEEAE0;
+    --brass:#B8863C;
+    --brass-light:#D9AE6B;
+    --slate:#2B2F36;
+    --mist:#C7D2DA;
+    --line: rgba(246,244,238,0.14);
+    --green:#2E7D46;
+    --red:#B33A3A;
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
   body{
     font-family:'Work Sans', sans-serif;
-    background:#fff;
-    color:#0E2136;
+    background:var(--whitewash);
+    color:var(--slate);
     min-height:100vh;
   }
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px; border-bottom:1px solid #eee; font-size:0.85rem;
+  h1{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); }
+  a{ color:inherit; text-decoration:none; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--brass);
   }
-  header a{ color:#5a5f66; text-decoration:none; }
-  header a:hover{ color:#0E2136; }
-  .header-links{ display:flex; gap:18px; align-items:center; }
-  main{ padding:40px 28px 80px; max-width:1000px; margin:0 auto; }
-  h1{ font-size:1.3rem; margin-bottom:6px; }
-  .subtitle{ color:#8a8f96; font-size:0.9rem; margin-bottom:28px; }
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(14,33,54,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .navwrap{
+    max-width:1120px; margin:0 auto; padding:0 28px;
+    display:flex; align-items:center; justify-content:space-between; height:68px; flex-wrap:wrap; gap:10px;
+  }
+  .logo{ font-family:'Fraunces', serif; font-size:1.15rem; color:var(--whitewash); font-weight:600; }
+  .logo span{ color:var(--brass-light); }
+  .admin-links{ display:flex; gap:24px; align-items:center; }
+  .admin-links a{ color:var(--mist); font-size:0.88rem; transition:color .2s; }
+  .admin-links a:hover{ color:var(--whitewash); }
+  .admin-links a.active{ color:var(--brass-light); font-weight:600; }
+  .back-link{ color:var(--mist); font-size:0.88rem; }
+  .back-link:hover{ color:var(--whitewash); }
+
+  main{ max-width:1000px; margin:0 auto; padding:48px 28px 96px; }
+  .page-head{ margin-bottom:32px; }
+  .page-head h1{ font-size:1.6rem; margin-bottom:6px; }
+  .subtitle{ color:#6b7076; font-size:0.94rem; }
 
   .fb-signin-box{
-    max-width:360px; margin:60px auto; border:1px solid #eee; border-radius:6px;
-    padding:28px; text-align:left;
+    max-width:380px; margin:60px auto; border:1px solid var(--whitewash-2); border-radius:8px;
+    padding:32px; text-align:left; background:#fff;
   }
-  .fb-signin-title{ font-weight:600; margin-bottom:6px; }
-  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:16px; }
+  .fb-signin-title{ font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem; color:var(--ink); margin-bottom:6px; }
+  .fb-signin-note{ color:#8a8f96; font-size:0.85rem; margin-bottom:18px; }
   .fb-signin-box input{
-    width:100%; padding:10px 12px; margin-bottom:10px; border:1px solid #D9D4C6;
-    border-radius:4px; font-size:0.92rem;
+    width:100%; padding:12px 14px; margin-bottom:10px; border:1px solid #D9D4C6;
+    border-radius:4px; font-size:0.94rem; font-family:'Work Sans',sans-serif;
   }
+  .fb-signin-box input:focus{ outline:none; border-color:var(--brass); }
   .fb-signin-box button{
-    width:100%; padding:11px; border:none; border-radius:4px; background:#B8863C;
-    color:#0E2136; font-weight:600; cursor:pointer;
+    width:100%; padding:12px; border:none; border-radius:4px; background:var(--brass);
+    color:var(--ink); font-weight:600; cursor:pointer; font-size:0.94rem; transition:transform .15s ease;
   }
-  .fb-signin-error{ color:#B33A3A; font-size:0.82rem; margin-top:8px; min-height:1em; }
+  .fb-signin-box button:hover{ transform:translateY(-2px); }
+  .fb-signin-error{ color:var(--red); font-size:0.82rem; margin-top:8px; min-height:1em; }
 
   .demande-card{
-    border:1px solid #eee; border-radius:6px; padding:20px 22px; margin-bottom:16px;
+    background:#fff; border:1px solid var(--whitewash-2); border-radius:6px;
+    padding:22px 24px; margin-bottom:16px; transition:border-color .2s;
   }
-  .demande-card .top-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
-  .demande-card .business{ font-weight:600; font-size:1.05rem; }
-  .demande-card .date{ color:#8a8f96; font-size:0.8rem; }
+  .demande-card:hover{ border-color:var(--brass); }
+  .demande-card .top-row{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; flex-wrap:wrap; gap:6px; }
+  .demande-card .business{ font-family:'Fraunces', serif; font-weight:500; font-size:1.1rem; color:var(--ink); }
+  .demande-card .date{ color:#8a8f96; font-size:0.8rem; font-family:'IBM Plex Mono',monospace; }
   .demande-card .meta{ color:#5a5f66; font-size:0.88rem; margin-bottom:10px; }
   .demande-card pre{
     white-space:pre-wrap; font-family:'Work Sans',sans-serif; font-size:0.86rem;
-    color:#3a3f46; background:#fafafa; border-radius:4px; padding:12px 14px;
+    color:#3a3f46; background:var(--whitewash); border-radius:4px; padding:14px 16px;
   }
   .tier-badge{
-    display:inline-block; font-size:0.72rem; font-weight:600; padding:3px 9px;
-    border-radius:10px; background:#EEEAE0; color:#0E2136; margin-left:8px;
+    display:inline-block; font-size:0.72rem; font-weight:600; padding:3px 10px;
+    border-radius:10px; background:var(--whitewash-2); color:var(--ink); margin-left:8px;
+  }
+  .type-badge{
+    display:inline-block; font-size:0.72rem; font-weight:600; padding:3px 10px;
+    border-radius:10px; background:var(--ink); color:var(--whitewash); margin-left:8px;
   }
   .empty-state, .error-state{ color:#8a8f96; font-size:0.92rem; padding:40px 0; text-align:center; }
-  .error-state{ color:#B33A3A; }
+  .error-state{ color:var(--red); }
+
+  .toolbar{ display:flex; justify-content:flex-end; margin-bottom:18px; }
+  .export-btn{
+    padding:9px 18px; border:1px solid var(--whitewash-2); border-radius:4px; background:#fff;
+    color:var(--ink); font-weight:600; font-size:0.86rem; cursor:pointer; transition:border-color .2s;
+  }
+  .export-btn:hover{ border-color:var(--brass); }
+
+  .status-row{ display:flex; align-items:center; gap:8px; margin-top:12px; }
+  .status-row label{ font-size:0.78rem; color:#8a8f96; font-weight:600; }
+  .status-select{
+    font-family:'Work Sans',sans-serif; font-size:0.82rem; padding:5px 9px; border-radius:4px;
+    border:1px solid #D9D4C6; background:#fff; color:var(--slate);
+  }
+  .status-select.s-nouveau{ border-color:var(--brass); color:var(--brass); font-weight:600; }
+  .status-select.s-encours{ border-color:var(--atlantic); color:var(--atlantic); font-weight:600; }
+  .status-select.s-accepte{ border-color:var(--green); color:var(--green); font-weight:600; }
+  .status-select.s-termine{ color:#8a8f96; }
 </style>
 </head>
 <body>
 
-<header>
-  <span>Cyber Web Development — Admin</span>
-  <span class="header-links">
-    <a href="admin-coupons.html">Coupons</a>
-    <a href="index.html">← Retour au site</a>
-  </span>
-</header>
+<nav>
+  <div class="navwrap">
+    <div class="logo">Cyber<span>Web</span> Development</div>
+    <span class="admin-links">
+      <a href="admin.html" class="active">Demandes</a>
+      <a href="admin-coupons.html">Coupons</a>
+      <a href="admin-utilisateurs.html">Utilisateurs</a>
+      <a href="index.html" class="back-link">← Retour au site</a>
+    </span>
+  </div>
+</nav>
 
 <main>
-  <h1>Demandes de projet</h1>
-  <p class="subtitle">Toutes les demandes soumises via demarrer.html.</p>
+  <div class="page-head">
+    <span class="eyebrow">Admin</span>
+    <h1>Demandes de projet</h1>
+    <p class="subtitle">Toutes les demandes soumises via démarrer.html.</p>
+  </div>
+  <div class="toolbar">
+    <button class="export-btn" id="export-csv-btn">Exporter en CSV</button>
+  </div>
   <div id="demandes-root">
     <p class="empty-state">Chargement...</p>
   </div>
@@ -109,12 +185,18 @@
       await cwdRenderFirebaseSignIn(root, CWD_ADMIN_EMAIL);
     }
 
+    const STATUSES = ['Nouveau', 'En discussion', 'Accepté', 'Terminé'];
+    const STATUS_CLASS = { 'Nouveau': 's-nouveau', 'En discussion': 's-encours', 'Accepté': 's-accepte', 'Terminé': 's-termine' };
+    let loadedDemandes = []; // [{ id, data }]
+
     loadDemandes();
+    document.getElementById('export-csv-btn').addEventListener('click', exportCsv);
 
     async function loadDemandes() {
       root.innerHTML = '<p class="empty-state">Chargement des demandes...</p>';
       try {
         const snap = await cwdDb.collection('demandes').orderBy('created_at', 'desc').get();
+        loadedDemandes = [];
         if (snap.empty) {
           root.innerHTML = '<p class="empty-state">Aucune demande pour le moment.</p>';
           return;
@@ -122,6 +204,8 @@
         root.innerHTML = '';
         snap.forEach(function (doc) {
           const d = doc.data();
+          loadedDemandes.push({ id: doc.id, data: d });
+          const status = d.status || 'Nouveau';
           const date = d.created_at && d.created_at.toDate
             ? d.created_at.toDate().toLocaleString('fr-FR')
             : '—';
@@ -129,8 +213,9 @@
           card.className = 'demande-card';
           card.innerHTML =
             '<div class="top-row">' +
-              '<span class="business">' + escapeHtml(d.business_name || d.client_name || 'Sans nom') +
+              '<span class="business">' + escapeHtml(d.business_name || d.project_name || d.client_name || 'Sans nom') +
               (d.package_tier ? '<span class="tier-badge">' + escapeHtml(d.package_tier) + '</span>' : '') +
+              (d.project_type ? '<span class="type-badge">' + escapeHtml(d.project_type) + '</span>' : '') +
               '</span>' +
               '<span class="date">' + date + '</span>' +
             '</div>' +
@@ -138,14 +223,84 @@
               escapeHtml(d.client_name || '') + ' · ' + escapeHtml(d.client_email || '') +
               (d.discount_code ? ' · Code: ' + escapeHtml(d.discount_code) + ' (' + escapeHtml(String(d.discount_percent || '')) + '%)' : '') +
             '</div>' +
-            '<pre>' + escapeHtml(d.message || '') + '</pre>';
+            '<pre>' + escapeHtml(d.message || '') + '</pre>' +
+            '<div class="status-row">' +
+              '<label for="status-' + doc.id + '">Statut</label>' +
+              '<select class="status-select ' + STATUS_CLASS[status] + '" id="status-' + doc.id + '" data-id="' + doc.id + '">' +
+                STATUSES.map(function (s) { return '<option value="' + s + '"' + (s === status ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+              '</select>' +
+            '</div>';
           root.appendChild(card);
+        });
+        root.querySelectorAll('.status-select').forEach(function (sel) {
+          sel.addEventListener('change', onStatusChange);
         });
       } catch (err) {
         root.innerHTML = '<p class="error-state">Impossible de charger les demandes. ' +
           'Vérifiez que Firebase est bien configuré (firebase-config.js) et que les règles ' +
           'Firestore sont publiées, et que vous êtes bien connecté.</p>';
       }
+    }
+
+    async function onStatusChange(e) {
+      const sel = e.target;
+      const id = sel.dataset.id;
+      const newStatus = sel.value;
+      sel.className = 'status-select ' + STATUS_CLASS[newStatus];
+      sel.disabled = true;
+      try {
+        await cwdDb.collection('demandes').doc(id).update({ status: newStatus });
+        const entry = loadedDemandes.find(function (x) { return x.id === id; });
+        if (entry) entry.data.status = newStatus;
+      } catch (err) {
+        alert('Impossible de mettre à jour le statut — vérifiez les règles Firestore.');
+      } finally {
+        sel.disabled = false;
+      }
+    }
+
+    function exportCsv() {
+      if (!loadedDemandes.length) { alert('Aucune demande à exporter.'); return; }
+      const cols = ['date', 'project_type', 'status', 'client_name', 'client_email',
+        'business_name_or_project_name', 'package_tier', 'discount_code', 'discount_percent'];
+      const rows = [cols];
+      loadedDemandes.forEach(function (entry) {
+        const d = entry.data;
+        const date = d.created_at && d.created_at.toDate ? d.created_at.toDate().toLocaleString('fr-FR') : '';
+        rows.push([
+          date,
+          d.project_type || '',
+          d.status || 'Nouveau',
+          d.client_name || '',
+          d.client_email || '',
+          d.business_name || d.project_name || '',
+          d.package_tier || '',
+          d.discount_code || '',
+          d.discount_percent != null ? String(d.discount_percent) : ''
+        ]);
+      });
+      const csv = rows.map(function (row) {
+        return row.map(csvEscape).join(',');
+      }).join('\r\n');
+      downloadFile('demandes-' + new Date().toISOString().slice(0, 10) + '.csv', csv);
+    }
+
+    function csvEscape(val) {
+      const s = String(val == null ? '' : val);
+      if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    }
+
+    function downloadFile(filename, content) {
+      const blob = new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     function escapeHtml(str) {

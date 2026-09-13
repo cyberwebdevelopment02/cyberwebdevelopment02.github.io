@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Démarrer un projet — Cyber Web Development</title>
+<title>Démarrer un projet personnel — Cyber Web Development</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -66,6 +66,16 @@
   .intro h1{ font-size:clamp(1.8rem,3.4vw,2.6rem); margin:14px 0 16px; }
   .intro p{ color:var(--mist); max-width:60ch; font-size:1.02rem; }
 
+  /* TYPE CHOOSER */
+  .type-chooser{ display:flex; gap:14px; flex-wrap:wrap; margin-top:26px; }
+  .type-btn{
+    flex:1; min-width:200px; display:block; padding:16px 20px; border-radius:6px;
+    font-weight:600; font-size:0.94rem; text-align:center; transition:transform .15s ease, opacity .15s ease;
+  }
+  .type-btn.active{ background:var(--brass); color:var(--ink); }
+  .type-btn:not(.active){ border:1px solid var(--line); color:var(--whitewash); }
+  .type-btn:not(.active):hover{ border-color:var(--brass-light); transform:translateY(-2px); }
+
   /* FORM */
   .formsection{ padding:56px 0 96px; }
   form{ display:flex; flex-direction:column; gap:44px; }
@@ -97,9 +107,7 @@
   textarea{ resize:vertical; min-height:80px; }
 
   .radiogroup{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
-  .radiopill{
-    position:relative;
-  }
+  .radiopill{ position:relative; }
   .radiopill input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; }
   .radiopill span{
     display:inline-block; padding:10px 16px; border:1px solid #D9D4C6; border-radius:20px;
@@ -108,12 +116,6 @@
   .radiopill input:checked + span{
     background:var(--ink); color:var(--whitewash); border-color:var(--ink);
   }
-
-  .servicecard{
-    border:1px solid #D9D4C6; border-radius:6px; padding:18px; margin-top:14px;
-  }
-  .servicecard .grid2{ margin-top:0; }
-  .servicecard-title{ font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--brass); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; display:block; }
 
   .submitbar{
     display:flex; align-items:center; gap:18px; flex-wrap:wrap; padding-top:8px; border-top:1px solid #E2DECF;
@@ -152,16 +154,6 @@
     .grid2{ grid-template-columns:1fr; }
     .submitbar{ flex-direction:column; align-items:flex-start; }
   }
-
-  /* TYPE CHOOSER */
-  .type-chooser{ display:flex; gap:14px; flex-wrap:wrap; margin-top:26px; }
-  .type-btn{
-    flex:1; min-width:200px; display:block; padding:16px 20px; border-radius:6px;
-    font-weight:600; font-size:0.94rem; text-align:center; transition:transform .15s ease, opacity .15s ease;
-  }
-  .type-btn.active{ background:var(--brass); color:var(--ink); }
-  .type-btn:not(.active){ border:1px solid var(--line); color:var(--whitewash); }
-  .type-btn:not(.active):hover{ border-color:var(--brass-light); transform:translateY(-2px); }
 </style>
 </head>
 <body>
@@ -177,11 +169,11 @@
 <header class="intro">
   <div class="wrap">
     <span class="eyebrow">Démarrer un projet</span>
-    <h1>Parlons de votre site.</h1>
-    <p>Remplissez ce formulaire avec vos informations et celles de votre commerce. Il nous sert à préparer votre fiche client (index.info) et à lancer votre projet — rien n'est facturé avant qu'on ait échangé et validé un prix fixe ensemble.</p>
+    <h1>Parlons de votre site personnel.</h1>
+    <p>Remplissez ce formulaire avec vos informations et le type de site que vous voulez. Il nous sert à préparer votre fiche client et à lancer votre projet — rien n'est facturé avant qu'on ait échangé et validé un prix fixe ensemble.</p>
     <div class="type-chooser">
-      <a href="demarrer.html" class="type-btn active">Site pour un commerce</a>
-      <a href="demarrer-personnel.html" class="type-btn">Site personnel</a>
+      <a href="demarrer.html" class="type-btn">Site pour un commerce</a>
+      <a href="demarrer-personnel.html" class="type-btn active">Site personnel</a>
     </div>
   </div>
 </header>
@@ -193,11 +185,11 @@
       <span class="eyebrow">Connexion requise</span>
       <h2>Connectez-vous pour démarrer un projet</h2>
       <p>Pour envoyer une demande de projet, vous devez d'abord vous connecter avec votre email.</p>
-      <a href="login.html?redirect=demarrer.html" class="btn">Se connecter</a>
+      <a href="login.html?redirect=demarrer-personnel.html" class="btn">Se connecter</a>
     </div>
 
     <form id="project-form">
-      <input type="hidden" id="project_type" name="project_type" value="Business">
+      <input type="hidden" id="project_type" name="project_type" value="Personnel">
 
       <fieldset>
         <legend>
@@ -206,11 +198,11 @@
         </legend>
         <div class="grid2">
           <div class="field">
-            <label for="client_name">Nom du client</label>
+            <label for="client_name">Votre nom</label>
             <input type="text" id="client_name" name="client_name" required>
           </div>
           <div class="field">
-            <label for="client_email">Email du client</label>
+            <label for="client_email">Votre email</label>
             <input type="email" id="client_email" name="client_email" required>
           </div>
         </div>
@@ -250,44 +242,45 @@
 
       <fieldset>
         <legend>
-          <span class="eyebrow">03 — Votre commerce</span>
-          <h2>Informations de base</h2>
+          <span class="eyebrow">03 — Votre projet</span>
+          <h2>Le site en question</h2>
         </legend>
         <div class="grid2">
           <div class="field">
-            <label for="business_name">Nom du commerce</label>
-            <input type="text" id="business_name" name="business_name" required>
+            <label for="project_name">Nom du site / projet <span class="opt">(ex. votre nom, votre pseudo...)</span></label>
+            <input type="text" id="project_name" name="project_name" required>
           </div>
           <div class="field">
-            <label for="city">Ville</label>
-            <input type="text" id="city" name="city" required>
-          </div>
-        </div>
-        <div class="grid2" style="margin-top:14px;">
-          <div class="field">
-            <label for="category">Catégorie <span class="opt">(café, salon, clinique...)</span></label>
-            <input type="text" id="category" name="category" required>
-          </div>
-          <div class="field">
-            <label for="year_founded">Année de création <span class="opt">(optionnel)</span></label>
-            <input type="text" id="year_founded" name="year_founded" placeholder="N/A si non pertinent">
+            <label for="city">Ville <span class="opt">(optionnel)</span></label>
+            <input type="text" id="city" name="city">
           </div>
         </div>
         <div class="field" style="margin-top:14px;">
-          <label for="differentiator">Ce qui vous différencie de la concurrence</label>
-          <textarea id="differentiator" name="differentiator" placeholder="La seule chose qui donne vraiment envie de vous choisir"></textarea>
+          <label for="site_type">Quel type de site voulez-vous ?</label>
+          <select id="site_type" name="site_type" required>
+            <option value="">— Choisir —</option>
+            <option value="Portfolio">Portfolio</option>
+            <option value="CV en ligne / Resume">CV en ligne / Resume</option>
+            <option value="Blog personnel">Blog personnel</option>
+            <option value="Site d'événement (mariage, anniversaire...)">Site d'événement (mariage, anniversaire...)</option>
+            <option value="Page de liens (link-in-bio)">Page de liens (link-in-bio)</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="site_type_notes">Précisez ce que vous voulez sur le site</label>
+          <textarea id="site_type_notes" name="site_type_notes" placeholder="Les pages ou sections que vous imaginez, ce que les visiteurs doivent pouvoir y faire..."></textarea>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>
-          <span class="eyebrow">04 — Contact affiché sur le site</span>
-          <h2>Coordonnées du commerce</h2>
+          <span class="eyebrow">04 — Contact affiché sur le site <span class="opt" style="font-size:1rem;">(optionnel)</span></span>
         </legend>
         <div class="grid2">
           <div class="field">
             <label for="business_phone">Téléphone</label>
-            <input type="tel" id="business_phone" name="business_phone" required>
+            <input type="tel" id="business_phone" name="business_phone">
           </div>
           <div class="field">
             <label for="business_whatsapp">WhatsApp <span class="opt">("identique au téléphone" possible)</span></label>
@@ -296,69 +289,30 @@
         </div>
         <div class="grid2" style="margin-top:14px;">
           <div class="field">
-            <label for="business_email">Email</label>
-            <input type="email" id="business_email" name="business_email" required>
+            <label for="business_email">Email à afficher <span class="opt">(si différent du vôtre)</span></label>
+            <input type="email" id="business_email" name="business_email">
           </div>
           <div class="field">
-            <label for="address">Adresse</label>
-            <input type="text" id="address" name="address" required>
+            <label for="address">Réseaux sociaux <span class="opt">(liens à inclure)</span></label>
+            <input type="text" id="address" name="address" placeholder="Instagram, LinkedIn...">
           </div>
-        </div>
-        <div class="field" style="margin-top:14px;">
-          <label for="hours">Horaires d'ouverture</label>
-          <input type="text" id="hours" name="hours" placeholder="ex. Lun-Sam 9h-19h, Dim fermé">
         </div>
       </fieldset>
 
       <fieldset>
         <legend>
-          <span class="eyebrow">05 — À propos</span>
+          <span class="eyebrow">05 — À propos de vous</span>
           <h2>Votre histoire</h2>
         </legend>
         <div class="field">
-          <label for="about_notes">Quelques notes <span class="opt">(historique, valeurs — une ligne suffit pour Starter)</span></label>
+          <label for="about_notes">Quelques notes <span class="opt">(parcours, passions, ce que vous voulez montrer)</span></label>
           <textarea id="about_notes" name="about_notes"></textarea>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>
-          <span class="eyebrow">06 — Services</span>
-          <h2>Vos offres <span class="opt" style="font-size:1rem;">(2 à 4)</span></h2>
-        </legend>
-        <div class="servicecard">
-          <span class="servicecard-title">Service 1</span>
-          <div class="grid2">
-            <div class="field"><label for="service_1_name">Nom</label><input type="text" id="service_1_name" name="service_1_name" required></div>
-            <div class="field"><label for="service_1_notes">Notes</label><input type="text" id="service_1_notes" name="service_1_notes"></div>
-          </div>
-        </div>
-        <div class="servicecard">
-          <span class="servicecard-title">Service 2</span>
-          <div class="grid2">
-            <div class="field"><label for="service_2_name">Nom</label><input type="text" id="service_2_name" name="service_2_name" required></div>
-            <div class="field"><label for="service_2_notes">Notes</label><input type="text" id="service_2_notes" name="service_2_notes"></div>
-          </div>
-        </div>
-        <div class="servicecard">
-          <span class="servicecard-title">Service 3 <span class="opt">(Standard/Premium)</span></span>
-          <div class="grid2">
-            <div class="field"><label for="service_3_name">Nom</label><input type="text" id="service_3_name" name="service_3_name"></div>
-            <div class="field"><label for="service_3_notes">Notes</label><input type="text" id="service_3_notes" name="service_3_notes"></div>
-          </div>
-        </div>
-        <div class="servicecard">
-          <span class="servicecard-title">Service 4 <span class="opt">(Standard/Premium)</span></span>
-          <div class="grid2">
-            <div class="field"><label for="service_4_name">Nom</label><input type="text" id="service_4_name" name="service_4_name"></div>
-            <div class="field"><label for="service_4_notes">Notes</label><input type="text" id="service_4_notes" name="service_4_notes"></div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>
-          <span class="eyebrow">07 — Galerie <span class="opt" style="font-size:1rem;">(Standard/Premium)</span></span>
+          <span class="eyebrow">06 — Galerie <span class="opt" style="font-size:1rem;">(Standard/Premium)</span></span>
         </legend>
         <div class="field">
           <label>Avez-vous des photos ?</label>
@@ -375,42 +329,32 @@
 
       <fieldset>
         <legend>
-          <span class="eyebrow">08 — Témoignages <span class="opt" style="font-size:1rem;">(optionnel — laissez vide si aucun)</span></span>
-        </legend>
-        <div class="grid2">
-          <div class="field"><label for="testimonial_1_quote">Témoignage 1</label><textarea id="testimonial_1_quote" name="testimonial_1_quote"></textarea></div>
-          <div class="field"><label for="testimonial_1_name">Nom du client</label><input type="text" id="testimonial_1_name" name="testimonial_1_name"></div>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>
-          <span class="eyebrow">09 — Marque <span class="opt" style="font-size:1rem;">(optionnel)</span></span>
+          <span class="eyebrow">07 — Marque <span class="opt" style="font-size:1rem;">(optionnel)</span></span>
         </legend>
         <div class="grid2">
           <div class="field">
-            <label for="brand_colors">Couleurs de marque</label>
+            <label for="brand_colors">Couleurs préférées</label>
             <input type="text" id="brand_colors" name="brand_colors" placeholder="Codes hex, ou 'pas sûr'">
           </div>
           <div class="field">
-            <label for="brand_tone">Ton de la marque</label>
-            <input type="text" id="brand_tone" name="brand_tone" placeholder="ex. chaleureux, moderne, direct">
+            <label for="brand_tone">Ton du site</label>
+            <input type="text" id="brand_tone" name="brand_tone" placeholder="ex. chaleureux, moderne, minimaliste">
           </div>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>
-          <span class="eyebrow">10 — Autres notes</span>
+          <span class="eyebrow">08 — Autres notes</span>
         </legend>
         <div class="field">
-          <textarea id="anything_else" name="anything_else" placeholder="Demandes particulières, éléments à éviter, contexte concurrentiel..."></textarea>
+          <textarea id="anything_else" name="anything_else" placeholder="Demandes particulières, éléments à éviter, sites qui vous inspirent..."></textarea>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>
-          <span class="eyebrow">11 — Code de réduction <span class="opt">(optionnel)</span></span>
+          <span class="eyebrow">09 — Code de réduction <span class="opt">(optionnel)</span></span>
         </legend>
         <div class="field">
           <label for="discount_code">Code à 16 chiffres</label>
@@ -466,10 +410,8 @@
 
 <script>
   // ---- SETUP REQUIRED ----
-  // 1. Sign up at https://formspree.io with cyberweb.development02@gmail.com
-  // 2. Create a form, point it at cyberweb.development02@gmail.com
-  // 3. Copy the endpoint (looks like https://formspree.io/f/XXXXXXXX)
-  // 4. Paste it below, replacing YOUR_FORM_ID
+  // Reuses the same Formspree form as demarrer.html — same endpoint, so
+  // both business and personal requests land in the same inbox.
   const FORMSPREE_ENDPOINT = 'https://formspree.io/f/moeqaojr';
 
   document.getElementById('project-form').addEventListener('submit', async function(e){
@@ -485,8 +427,6 @@
     const photos = f.querySelector('input[name="photos_available"]:checked');
 
     // ---- Discount code check (optional field) ----
-    // A code is only ever consumed once the Formspree send below actually
-    // succeeds — an entered code is never marked used on a failed submission.
     discountNote.textContent = '';
     discountNote.style.color = '';
     let discountCode = v('discount_code');
@@ -529,7 +469,7 @@
     }
 
     const lines = [
-      `Nouvelle demande de projet — ${v('business_name') || 'Client sans nom'}`,
+      `Nouvelle demande de projet personnel — ${v('project_name') || v('client_name') || 'Sans nom'}`,
       '',
       '== CLIENT ==',
       `type de projet: ${v('project_type')}`,
@@ -537,38 +477,24 @@
       `Email du client: ${v('client_email')}`,
       `Mode de paiement souhaité: ${payment ? payment.value : ''}`,
       '',
-      '== index.info ==',
+      '== PROJET ==',
       `package_tier: ${v('package_tier')}`,
       `languages_needed: ${v('languages_needed')}`,
       '',
-      `business_name: ${v('business_name')}`,
+      `project_name: ${v('project_name')}`,
       `city: ${v('city')}`,
-      `category: ${v('category')}`,
-      `year_founded: ${v('year_founded')}`,
-      `differentiator: ${v('differentiator')}`,
+      `site_type: ${v('site_type')}`,
+      `site_type_notes: ${v('site_type_notes')}`,
       '',
       `phone: ${v('business_phone')}`,
       `whatsapp: ${v('business_whatsapp')}`,
-      `email: ${v('business_email')}`,
-      `address: ${v('address')}`,
-      `hours: ${v('hours')}`,
+      `email_a_afficher: ${v('business_email')}`,
+      `reseaux_sociaux: ${v('address')}`,
       '',
       `about_notes: ${v('about_notes')}`,
       '',
-      `service_1_name: ${v('service_1_name')}`,
-      `service_1_notes: ${v('service_1_notes')}`,
-      `service_2_name: ${v('service_2_name')}`,
-      `service_2_notes: ${v('service_2_notes')}`,
-      `service_3_name: ${v('service_3_name')}`,
-      `service_3_notes: ${v('service_3_notes')}`,
-      `service_4_name: ${v('service_4_name')}`,
-      `service_4_notes: ${v('service_4_notes')}`,
-      '',
       `photos_available: ${photos ? photos.value : ''}`,
       `gallery_notes: ${v('gallery_notes')}`,
-      '',
-      `testimonial_1_quote: ${v('testimonial_1_quote')}`,
-      `testimonial_1_name: ${v('testimonial_1_name')}`,
       '',
       `brand_colors: ${v('brand_colors')}`,
       `brand_tone: ${v('brand_tone')}`,
@@ -580,9 +506,11 @@
     ];
 
     const payload = {
-      _subject: `Nouveau projet — ${v('business_name') || v('client_name') || 'Sans nom'}`,
+      _subject: `Nouveau projet personnel — ${v('project_name') || v('client_name') || 'Sans nom'}`,
       message: lines.join('\n'),
       project_type: v('project_type'),
+      project_name: v('project_name'),
+      package_tier: v('package_tier'),
       client_name: v('client_name'),
       client_email: v('client_email'),
       discount_code: discountCode || '',
@@ -605,10 +533,6 @@
         errorMsg.style.display = 'none';
         confirmBox.classList.add('show');
 
-        // Best-effort: store the demande so it shows up in admin.html, and
-        // redeem the coupon so it can't be reused. If either of these fails
-        // (e.g. Firebase not yet configured), the client's request has
-        // already been sent via Formspree, so we don't block or alarm them.
         try {
           await cwdDb.collection('demandes').add(Object.assign({}, payload, {
             created_at: firebase.firestore.FieldValue.serverTimestamp()
