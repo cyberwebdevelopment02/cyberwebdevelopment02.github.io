@@ -230,6 +230,7 @@
         document.getElementById('new-code-box').classList.add('show');
         loadCoupons();
       } catch (err) {
+        console.error('cwd: erreur génération coupon ->', err);
         alert('La génération a échoué — vérifiez la configuration Firebase.');
       } finally {
         btn.disabled = false;
@@ -268,6 +269,7 @@
           tbody.appendChild(tr);
         });
       } catch (err) {
+        console.error('cwd: erreur chargement coupons ->', err);
         tbody.innerHTML = '<tr><td colspan="5" class="error-state">Impossible de charger les coupons.</td></tr>';
       }
     }

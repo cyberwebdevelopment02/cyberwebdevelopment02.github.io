@@ -236,6 +236,7 @@
           sel.addEventListener('change', onStatusChange);
         });
       } catch (err) {
+        console.error('cwd: erreur chargement demandes ->', err);
         root.innerHTML = '<p class="error-state">Impossible de charger les demandes. ' +
           'Vérifiez que Firebase est bien configuré (firebase-config.js) et que les règles ' +
           'Firestore sont publiées, et que vous êtes bien connecté.</p>';
@@ -253,6 +254,7 @@
         const entry = loadedDemandes.find(function (x) { return x.id === id; });
         if (entry) entry.data.status = newStatus;
       } catch (err) {
+        console.error('cwd: erreur mise à jour statut ->', err);
         alert('Impossible de mettre à jour le statut — vérifiez les règles Firestore.');
       } finally {
         sel.disabled = false;

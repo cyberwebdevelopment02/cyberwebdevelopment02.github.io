@@ -178,6 +178,7 @@
           tbody.appendChild(tr);
         });
       } catch (err) {
+        console.error('cwd: erreur chargement utilisateurs ->', err);
         root.innerHTML = '<p class="error-state">Impossible de charger les utilisateurs. ' +
           'Vérifiez que la collection "users" existe et que les règles Firestore ' +
           'autorisent sa lecture par un admin connecté.</p>';
