@@ -62,14 +62,15 @@ function cwdRecordUserLogin(email) {
     console.error('cwd: cwdRecordUserLogin — cwdDb non défini (firebase-config.js pas chargé sur cette page ?)');
     return;
   }
-  const ref = cwdDb.collection('users').doc(email);
-  ref.get().then(function (snap) {
-    const update = { email: email, last_login_at: firebase.firestore.FieldValue.serverTimestamp() };
-    if (!snap.exists) {
-      update.first_login_at = firebase.firestore.FieldValue.serverTimestamp();
-    }
-    return ref.set(update, { merge: true });
-  }).then(function () {
+  // Single set() with merge — no prior get() needed, so this works even
+  // though the Firestore rules restrict reading the "users" collection
+  // to the admin. login_count uses FieldValue.increment, which works
+  // correctly on merge whether the document already exists or not.
+  cwdDb.collection('users').doc(email).set({
+    email: email,
+    last_login_at: firebase.firestore.FieldValue.serverTimestamp(),
+    login_count: firebase.firestore.FieldValue.increment(1)
+  }, { merge: true }).then(function () {
     console.log('cwd: connexion enregistrée pour', email);
   }).catch(function (err) {
     console.error('cwd: erreur enregistrement connexion ->', err);

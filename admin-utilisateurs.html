@@ -115,7 +115,7 @@
   </div>
 </main>
 
-<script src="auth.js?v=7"></script>
+<script src="auth.js?v=8"></script>
 <script>
   (function () {
     const email = cwdGetLoggedInEmail();
@@ -156,7 +156,7 @@
           return;
         }
         const table = document.createElement('table');
-        table.innerHTML = '<thead><tr><th>Email</th><th>Dernière connexion</th></tr></thead><tbody id="users-tbody"></tbody>';
+        table.innerHTML = '<thead><tr><th>Email</th><th>Dernière connexion</th><th>Connexions</th></tr></thead><tbody id="users-tbody"></tbody>';
         root.innerHTML = '';
         const countNote = document.createElement('p');
         countNote.className = 'count-note';
@@ -174,7 +174,8 @@
           if (email.toLowerCase() === CWD_ADMIN_EMAIL.toLowerCase()) tr.className = 'is-admin';
           tr.innerHTML =
             '<td class="email-cell">' + escapeHtml(email) + '</td>' +
-            '<td>' + last + '</td>';
+            '<td>' + last + '</td>' +
+            '<td>' + (d.login_count || 1) + '</td>';
           tbody.appendChild(tr);
         });
       } catch (err) {
