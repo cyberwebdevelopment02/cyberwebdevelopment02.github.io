@@ -58,7 +58,10 @@ function cwdIsAdmin() {
    (currently login.html) — silently does nothing otherwise, and never
    blocks or breaks the login flow if Firebase isn't configured yet. */
 function cwdRecordUserLogin(email) {
-  if (typeof cwdDb === 'undefined') return;
+  if (typeof cwdDb === 'undefined') {
+    console.error('cwd: cwdRecordUserLogin — cwdDb non défini (firebase-config.js pas chargé sur cette page ?)');
+    return;
+  }
   const ref = cwdDb.collection('users').doc(email);
   ref.get().then(function (snap) {
     const update = { email: email, last_login_at: firebase.firestore.FieldValue.serverTimestamp() };
@@ -66,7 +69,11 @@ function cwdRecordUserLogin(email) {
       update.first_login_at = firebase.firestore.FieldValue.serverTimestamp();
     }
     return ref.set(update, { merge: true });
-  }).catch(function () { /* non-blocking */ });
+  }).then(function () {
+    console.log('cwd: connexion enregistrée pour', email);
+  }).catch(function (err) {
+    console.error('cwd: erreur enregistrement connexion ->', err);
+  });
 }
 
 /* Renders the login/logout state into a nav element with id="auth-slot". */
