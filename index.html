@@ -123,6 +123,23 @@
   .card h3{ font-size:1.25rem; margin:14px 0 10px; color:var(--ink); }
   .card p{ color:#565b62; font-size:0.95rem; }
 
+  /* PORTFOLIO */
+  .portfolio{ background:var(--whitewash-2); }
+  .portfolio-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .portfolio-card{
+    background:#fff; border:1px solid var(--whitewash-2); border-radius:6px;
+    padding:28px 24px; transition:border-color .2s, transform .2s; display:flex; flex-direction:column;
+  }
+  .portfolio-card:hover{ border-color:var(--brass); transform:translateY(-3px); }
+  .portfolio-card h3{ font-size:1.1rem; color:var(--ink); margin-bottom:8px; }
+  .portfolio-card p{ color:#565b62; font-size:0.9rem; flex-grow:1; margin-bottom:14px; }
+  .portfolio-card a.visit{
+    font-family:'IBM Plex Mono',monospace; font-size:0.8rem; color:var(--brass);
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .portfolio-card a.visit:hover{ color:var(--ink); }
+  .portfolio-empty{ color:#8a8f96; font-size:0.94rem; }
+
   /* PROCESS */
   .process{ background:var(--whitewash-2); }
   .steps{ display:grid; grid-template-columns:repeat(5,1fr); gap:18px; margin-top:8px; }
@@ -205,7 +222,7 @@
 
   @media (max-width:860px){
     .hero .wrap{ grid-template-columns:1fr; }
-    .cards3, .pcards, .trustgrid{ grid-template-columns:1fr; }
+    .cards3, .pcards, .trustgrid, .portfolio-grid{ grid-template-columns:1fr; }
     .steps{ grid-template-columns:repeat(2,1fr); }
     .contact-box{ grid-template-columns:1fr; padding:36px 26px; }
     .navlinks{ display:none; }
@@ -219,6 +236,7 @@
     <div class="logo">Cyber<span>Web</span> Development</div>
     <div class="navlinks">
       <a href="#services">Services</a>
+      <a href="#portfolio">Nos Sites</a>
       <a href="#process">Méthode</a>
       <a href="#pricing">Tarifs</a>
       <a href="#contact">Contact</a>
@@ -296,6 +314,19 @@
       <div class="step"><span class="stepnum">03</span><h4>Conception</h4><p>Design et contenu, validés avec vous à chaque étape.</p></div>
       <div class="step"><span class="stepnum">04</span><h4>Mise en ligne</h4><p>Domaine, hébergement, site publié et testé.</p></div>
       <div class="step"><span class="stepnum">05</span><h4>Suivi</h4><p>Support et mises à jour selon votre forfait.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="portfolio" id="portfolio">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Nos réalisations</span>
+      <h2>Des sites livrés, pas des maquettes</h2>
+      <p>Un aperçu de nos derniers projets pour des commerces à Tanger.</p>
+    </div>
+    <div class="portfolio-grid" id="portfolio-grid">
+      <p class="portfolio-empty">Chargement...</p>
     </div>
   </div>
 </section>
@@ -416,6 +447,42 @@
 <script src="auth.js?v=8"></script>
 <script>
   cwdRenderAuthSlot();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+  (async function () {
+    const grid = document.getElementById('portfolio-grid');
+    try {
+      const snap = await cwdDb.collection('sites').orderBy('created_at', 'desc').limit(3).get();
+      if (snap.empty) {
+        grid.innerHTML = '<p class="portfolio-empty">Nos premiers projets arrivent bientôt.</p>';
+        return;
+      }
+      grid.innerHTML = '';
+      snap.forEach(function (doc) {
+        const d = doc.data();
+        const card = document.createElement('div');
+        card.className = 'portfolio-card';
+        card.innerHTML =
+          '<h3>' + escapeHtml(d.name || '') + '</h3>' +
+          (d.description ? '<p>' + escapeHtml(d.description) + '</p>' : '<p></p>') +
+          '<a class="visit" href="' + escapeAttr(d.url || '#') + '" target="_blank" rel="noopener">Voir le site →</a>';
+        grid.appendChild(card);
+      });
+    } catch (err) {
+      console.error('cwd: erreur chargement portfolio ->', err);
+      grid.innerHTML = '<p class="portfolio-empty">Nos premiers projets arrivent bientôt.</p>';
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+    function escapeAttr(str) { return escapeHtml(str); }
+  })();
 </script>
 </body>
 </html>

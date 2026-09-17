@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Vrai uniquement pour le compte Firebase Auth de l'admin
+    // (cyberweb.development02@gmail.com), configuré dans
+    // Authentication > Users. Les visiteurs du site ne sont JAMAIS
+    // authentifiés via Firebase Auth (leur connexion par code email
+    // est un système séparé, géré côté navigateur) — donc pour eux,
+    // request.auth est toujours null ici.
+    function isAdmin() {
+      return request.auth != null &&
+             request.auth.token.email == 'cyberweb.development02@gmail.com';
+    }
+
+    // ---- Demandes de projet (démarrer.html / démarrer-personnel.html) ----
+    // N'importe quel visiteur peut envoyer une demande.
+    // Seul l'admin peut les lire, les modifier (ex. changer le statut) ou les supprimer.
+    match /demandes/{demandeId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ---- Coupons (admin-coupons.html) ----
+    // N'importe qui peut lire UN coupon précis (pour vérifier un code
+    // saisi dans démarrer.html) et le marquer "used" au moment de l'envoi
+    // — mais seul l'admin peut lister tous les coupons ou en créer un.
+    match /coupons/{couponId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                       .hasOnly(['used', 'used_at']);
+    }
+
+    // ---- Utilisateurs connectés (login.html -> admin-utilisateurs.html) ----
+    // N'importe qui peut enregistrer sa propre connexion (email uniquement).
+    // Seul l'admin peut lister ou lire tous les utilisateurs.
+    match /users/{userEmail} {
+      allow create, update: if true;
+      allow get, list: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ---- Portfolio "Nos Sites" (admin-sites.html -> page d'accueil) ----
+    // N'importe qui peut lire la liste (affichée publiquement sur index.html).
+    // Seul l'admin peut ajouter ou supprimer un site.
+    match /sites/{siteId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
